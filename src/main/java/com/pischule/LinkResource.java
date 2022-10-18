@@ -7,8 +7,10 @@ import io.smallrye.mutiny.Uni;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("/")
@@ -19,6 +21,8 @@ public class LinkResource {
 
     @Inject
     Template view;
+
+
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -41,11 +45,10 @@ public class LinkResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     @ReactiveTransactional
-    public Uni<TemplateInstance> post(@FormParam("url") String url) {
+    public Uni<TemplateInstance> post(@Context UriInfo uriInfo, @FormParam("url") String url) {
         Link link = new Link();
-        link.url = url;
         return Link.persist(link)
-                .onItem().transform(saved -> view.data("link", link.id));
+                .onItem().transform(saved -> view.data("link", link.id).data("requestUrl", uriInfo.getRequestUri()));
     }
 
 }
