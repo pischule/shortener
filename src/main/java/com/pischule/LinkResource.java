@@ -23,7 +23,6 @@ public class LinkResource {
     Template view;
 
 
-
     @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get() {
@@ -47,6 +46,7 @@ public class LinkResource {
     @ReactiveTransactional
     public Uni<TemplateInstance> post(@Context UriInfo uriInfo, @FormParam("url") String url) {
         Link link = new Link();
+        link.url = url;
         return Link.persist(link)
                 .onItem().transform(saved -> view.data("link", link.id).data("requestUrl", uriInfo.getRequestUri()));
     }
