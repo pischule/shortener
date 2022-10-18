@@ -1,8 +1,6 @@
 package com.pischule;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
-import io.quarkus.logging.Log;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Uni;
@@ -14,10 +12,13 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 @Path("/")
-public class UiResource {
+public class LinkResource {
 
     @Inject
     Template index;
+
+    @Inject
+    Template view;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -26,12 +27,14 @@ public class UiResource {
     }
 
     @GET
+    @Produces(MediaType.TEXT_HTML)
     @Path("/{id}")
     public Uni<Response> redirect(@PathParam("id") String id) {
-        Log.info("id");
         return Link.findById(id)
                 .onItem().transform(l -> (Link) l)
-                .onItem().transform(it -> Response.temporaryRedirect(URI.create(it.url)).build());
+                .onItem().ifNotNull().transform(link -> link.url)
+                .onItem().ifNull().continueWith("/error/404")
+                .onItem().transform(url -> Response.temporaryRedirect(URI.create(url)).build());
     }
 
     @POST
@@ -40,11 +43,9 @@ public class UiResource {
     @ReactiveTransactional
     public Uni<TemplateInstance> post(@FormParam("url") String url) {
         Link link = new Link();
-        link.id = NanoIdUtils.randomNanoId().substring(0, 8);
         link.url = url;
-
         return Link.persist(link)
-                .onItem().transform(saved -> index.data("link", link.id));
+                .onItem().transform(saved -> view.data("link", link.id));
     }
 
 }
