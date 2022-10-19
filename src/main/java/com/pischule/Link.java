@@ -16,6 +16,7 @@ public class Link extends PanacheEntityBase {
     public String id;
     @Column(length = 512)
     public String url;
+    public long visits;
     public Instant createdAt;
 
     @PrePersist
