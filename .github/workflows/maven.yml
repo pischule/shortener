@@ -34,5 +34,5 @@ jobs:
     - name: Tag image
       run: docker tag runner/shortener:1.0-SNAPSHOT pischule/shortener:latest
     
-    - name: Tag image
+    - name: Push image
       run: docker push pischule/shortener:latest
