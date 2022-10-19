@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.time.Instant;
 
 @Path("/")
 public class LinkResource {
@@ -24,6 +25,9 @@ public class LinkResource {
 
     @Inject
     Template view;
+
+    @Inject
+    IdUtil idUtil;
 
     @GET
     @Path("")
@@ -38,6 +42,9 @@ public class LinkResource {
     public Uni<Response> post(@RestForm String url) {
         Link link = new Link();
         link.url = url;
+        link.id = idUtil.generate();
+        link.createdAt = Instant.now();
+
         return Link.persist(link)
                 .onItem().transform(v -> Response.seeOther(URI.create("/v/" + link.id)).build());
     }
