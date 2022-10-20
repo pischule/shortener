@@ -5,10 +5,12 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
+import org.hibernate.validator.constraints.URL;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -42,7 +44,7 @@ public class LinkResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Uni<Response> post(@RestForm String url) {
+    public Uni<Response> post(@RestForm @NotNull @URL String url) {
         Link link = new Link();
         link.url = url;
         link.id = idUtil.generate();
