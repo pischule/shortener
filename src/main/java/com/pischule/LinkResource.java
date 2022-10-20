@@ -1,10 +1,10 @@
 package com.pischule;
 
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.quarkus.logging.Log;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.pgclient.PgPool;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
 
@@ -15,16 +15,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.time.Instant;
 
 @Path("/")
 public class LinkResource {
+    @Inject
+    PgPool client;
 
     @Inject
     Template index;
 
     @Inject
     Template view;
+
+    @Inject
+    Template error;
 
     @Inject
     IdUtil idUtil;
@@ -38,39 +42,41 @@ public class LinkResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @ReactiveTransactional
     public Uni<Response> post(@RestForm String url) {
         Link link = new Link();
         link.url = url;
         link.id = idUtil.generate();
-        link.createdAt = Instant.now();
 
-        return Link.persist(link)
-                .onItem().transform(v -> Response.seeOther(URI.create("/v/" + link.id)).build());
+        return link.save(client)
+                .onItem().transform(l -> URI.create("/v/" + link.id))
+                .onItem().transform(uri -> Response.seeOther(uri).build());
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/v/{id:[A-Za-z0-9_-]{8}}")
     public Uni<TemplateInstance> view(@Context UriInfo uriInfo, @RestPath String id) {
-        return Link.findById(id)
-                .onItem().transform(l -> (Link) l)
-                .onItem().transform(link -> view
+        return Link.findById(client, id)
+                .onItem().ifNotNull().transform(link -> view
                         .data("link", link.id)
                         .data("visits", link.visits)
-                        .data("absoluteLink", uriInfo.getBaseUri() + link.id));
+                        .data("absoluteLink", uriInfo.getBaseUri() + link.id))
+                .onItem().ifNull().continueWith(
+                        () -> error.data("msg", "Not found"));
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/{id:[A-Za-z0-9_-]{8}}")
-    @ReactiveTransactional
     public Uni<Response> redirect(@RestPath String id) {
         Log.infof("redirect, id=%s", id);
-        return Link.findById(id)
-                .onItem().transform(l -> (Link) l)
-                .onItem().ifNotNull().invoke(l -> l.visits++)
-                .onItem().transform(link -> link.url)
-                .onItem().transform(url -> Response.temporaryRedirect(URI.create(url)).build());
+        return Link.findByIdIncrementingViews(client, id)
+                .onItem().ifNotNull().transform(link -> {
+                    String url = link.url;
+                    URI uri = URI.create(url);
+                    return Response.temporaryRedirect(uri).build();
+                })
+                .onItem().ifNull().continueWith(
+                        () -> Response.status(Response.Status.NOT_FOUND).build());
     }
 }
