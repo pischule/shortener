@@ -60,9 +60,8 @@ public class LinkResource {
     public Uni<TemplateInstance> view(@Context UriInfo uriInfo, @RestPath String id) {
         return Link.findById(client, id)
                 .onItem().ifNotNull().transform(link -> view
-                        .data("link", link.id)
-                        .data("visits", link.visits)
-                        .data("absoluteLink", uriInfo.getBaseUri() + link.id))
+                        .data("link", link)
+                        .data("baseUrl", uriInfo.getBaseUri()))
                 .onItem().ifNull().continueWith(
                         () -> error.data("msg", "Not found"));
     }
