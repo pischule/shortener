@@ -46,7 +46,7 @@ public class LinkResource {
         return renderedIndex;
     }
 
-    @Scheduled(every = "20s")
+    @Scheduled(every = "5m")
     @PostConstruct
     public void generateIndex() {
         Link.getStats(client)
