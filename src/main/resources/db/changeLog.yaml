@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: '1'
+      author: pischule
+      changes:
+        - createTable:
+            tableName: link
+            columns:
+              - column:
+                  name: id
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: url
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: visits
+                  type: bigint
+                  constraints:
+                    nullable: false
+                  defaultValue: '0'
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
