@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Path("/")
 public class LinkResource {
@@ -37,22 +38,28 @@ public class LinkResource {
     @Inject
     IdUtil idUtil;
 
-    String renderedIndex = "";
+    AtomicLong linksCount = new AtomicLong();
+    AtomicLong visitsCount = new AtomicLong();
 
     @GET
     @Path("")
     @Produces(MediaType.TEXT_HTML)
-    public String get() {
-        return renderedIndex;
+    public TemplateInstance get() {
+        return index.data("links", linksCount.get())
+                .data("visits", visitsCount.get());
     }
 
-    @Scheduled(every = "5m")
     @PostConstruct
-    public void generateIndex() {
-        Link.getStats(client)
-                .onItem().transform(s -> index.data("stats", s))
-                .onItem().transformToUni(TemplateInstance::createUni)
-                .onItem().invoke(s -> renderedIndex = s)
+    public void init() {
+        updateCounts();
+    }
+
+    @Scheduled(every = "1h")
+    public void updateCounts() {
+        Link.countAll(client)
+                .onItem().invoke(linksCount::set)
+                .flatMap(l -> Link.sumVisits(client))
+                .onItem().invoke(visitsCount::set)
                 .await().indefinitely();
     }
 
@@ -62,6 +69,8 @@ public class LinkResource {
         Link link = new Link();
         link.url = url;
         link.id = idUtil.generate();
+
+        linksCount.incrementAndGet();
 
         return link.save(client)
                 .onItem().transform(l -> URI.create("/v/" + link.id))
@@ -85,6 +94,9 @@ public class LinkResource {
     @Path("/{id:[A-Za-z0-9_-]{8}}")
     public Uni<Response> redirect(@RestPath String id) {
         Log.infof("redirect, id=%s", id);
+
+        visitsCount.incrementAndGet();
+
         return Link.findByIdIncrementingViews(client, id)
                 .onItem().ifNotNull().transform(link -> {
                     String url = link.url;

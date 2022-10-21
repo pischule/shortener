@@ -49,15 +49,16 @@ public class Link {
                 .onItem().transform(iterator -> iterator.hasNext() ? from(iterator.next()) : null);
     }
 
-    public static Uni<Stats> getStats(PgPool client) {
-        return client.query(""" 
-                        select count(1), coalesce(sum(visits), 0)
-                        from link""").execute()
+    public static Uni<Long> countAll(PgPool client) {
+        return client.query("select count(1) from link").execute()
                 .onItem().transform(rs -> rs.iterator().next())
-                .onItem().transform(row -> new Stats(
-                        row.getLong(0),
-                        row.getLong(1)
-                ));
+                .onItem().transform(row -> row.getLong(0));
+    }
+
+    public static Uni<Long> sumVisits(PgPool client) {
+        return client.query("select coalesce(sum(visits), 0) from link").execute()
+                .onItem().transform(rs -> rs.iterator().next())
+                .onItem().transform(row -> row.getLong(0));
     }
 
     public Uni<Link> save(PgPool client) {
