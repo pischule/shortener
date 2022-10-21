@@ -3,12 +3,14 @@ package com.pischule;
 import io.quarkus.logging.Log;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.scheduler.Scheduled;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
 import org.hibernate.validator.constraints.URL;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -35,11 +37,23 @@ public class LinkResource {
     @Inject
     IdUtil idUtil;
 
+    String renderedIndex = "";
+
     @GET
     @Path("")
     @Produces(MediaType.TEXT_HTML)
-    public TemplateInstance get() {
-        return index.instance();
+    public String get() {
+        return renderedIndex;
+    }
+
+    @Scheduled(every = "20s")
+    @PostConstruct
+    public void generateIndex() {
+        Link.getStats(client)
+                .onItem().transform(s -> index.data("stats", s))
+                .onItem().transformToUni(TemplateInstance::createUni)
+                .onItem().invoke(s -> renderedIndex = s)
+                .await().indefinitely();
     }
 
     @POST
