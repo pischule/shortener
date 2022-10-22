@@ -66,12 +66,8 @@ public class LinkResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Uni<Response> post(@RestForm @NotNull @URL String url) {
-        Link link = new Link();
-        link.url = url;
-        link.id = idUtil.generate();
-
+        Link link = new Link(idUtil.generate(), url, 0);
         linksCount.incrementAndGet();
-
         return link.save(client)
                 .onItem().transform(l -> URI.create("/v/" + link.id))
                 .onItem().transform(uri -> Response.seeOther(uri).build());

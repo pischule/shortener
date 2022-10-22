@@ -20,9 +20,6 @@ public class Link {
         this.visits = visits;
     }
 
-    public Link() {
-    }
-
     private static Link from(Row row) {
         return new Link(
                 row.getString("id"),
