@@ -6,6 +6,7 @@ import io.quarkus.qute.TemplateInstance;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.validator.constraints.URL;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
@@ -14,10 +15,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,6 +36,9 @@ public class LinkResource {
 
     @Inject
     IdUtil idUtil;
+
+    @ConfigProperty(name = "base-url")
+    String baseUrl;
 
     AtomicLong linksCount = new AtomicLong();
     AtomicLong visitsCount = new AtomicLong();
@@ -76,11 +78,11 @@ public class LinkResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/v/{id:[A-Za-z0-9_-]{8}}")
-    public Uni<TemplateInstance> view(@Context UriInfo uriInfo, @RestPath String id) {
+    public Uni<TemplateInstance> view(@RestPath String id) {
         return Link.findById(client, id)
                 .onItem().ifNotNull().transform(link -> view
                         .data("link", link)
-                        .data("baseUrl", uriInfo.getBaseUri()))
+                        .data("baseUrl", baseUrl))
                 .onItem().ifNull().continueWith(
                         () -> error.data("msg", "Not found"));
     }
