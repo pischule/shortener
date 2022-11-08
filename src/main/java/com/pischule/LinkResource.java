@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static javax.ws.rs.core.Response.Status.FOUND;
+
 @Path("/")
 public class LinkResource {
     @Inject
@@ -72,7 +74,7 @@ public class LinkResource {
         linksCount.incrementAndGet();
         return link.save(client)
                 .onItem().transform(l -> URI.create("/v/" + link.id))
-                .onItem().transform(uri -> Response.seeOther(uri).build());
+                .onItem().transform(uri -> Response.status(FOUND).location(uri).build());
     }
 
     @GET
