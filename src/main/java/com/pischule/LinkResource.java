@@ -13,6 +13,7 @@ import org.jboss.resteasy.reactive.RestPath;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -69,7 +70,7 @@ public class LinkResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Uni<Response> post(@RestForm @NotNull @URL String url) {
+    public Uni<Response> post(@RestForm @NotNull @NotBlank @URL String url) {
         Link link = new Link(idUtil.generate(), url, 0);
         linksCount.incrementAndGet();
         return link.save(client)
