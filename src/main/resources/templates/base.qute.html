@@ -8,9 +8,25 @@
     <title>{#insert title}SHRINK{/insert}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --background: white;
+            --text: black;
+            --gray: #494949;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #171717;
+                --text: #ffffff;
+                --gray: #a8a8a8;
+            }
+        }
+
         body {
             font-family: monospace;
             padding: 3px;
+            background-color: var(--background);
+            color: var(--text);
         }
 
         main {
@@ -21,20 +37,22 @@
         }
 
         a {
-            color: black;
+            color: var(--text);
             text-decoration: none;
             overflow-wrap: anywhere;
-            border-bottom: solid black;
+            border-bottom: solid var(--text);
         }
 
         a:hover, a:active {
-            background-color: black;
-            color: white;
+            background-color: var(--text);
+            color: var(--background);
         }
 
         input {
             border: none;
-            border-bottom: solid black 0.15rem;
+            border-bottom: solid var(--text) 0.15rem;
+            background-color: var(--background);
+            color: var(--text);
         }
 
         input:focus {
@@ -48,8 +66,8 @@
         }
 
         button {
-            background-color: black;
-            color: white;
+            background-color: var(--text);
+            color: var(--background);
             padding: 0.2rem;
             padding-inline: 0.4rem;
             border: none;
@@ -60,7 +78,7 @@
         }
 
         div.stats p {
-            color: #494949;
+            color: var(--gray);
             font-size: 110%;
         }
     </style>
