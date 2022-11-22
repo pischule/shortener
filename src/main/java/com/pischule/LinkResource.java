@@ -10,6 +10,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.validator.constraints.URL;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
+import org.jboss.resteasy.reactive.RestResponse.Status;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -36,6 +37,9 @@ public class LinkResource {
 
     @Inject
     Template error;
+
+    @Inject
+    Template redirect;
 
     @Inject
     IdUtil idUtil;
@@ -102,7 +106,10 @@ public class LinkResource {
                 .onItem().ifNotNull().transform(link -> {
                     String url = link.url;
                     URI uri = URI.create(url);
-                    return Response.temporaryRedirect(uri).build();
+                    return Response.status(Status.MOVED_PERMANENTLY)
+                            .location(uri)
+                            .entity(redirect.data("url", url))
+                            .build();
                 })
                 .onItem().ifNull().continueWith(
                         () -> Response.status(Response.Status.NOT_FOUND).build());
