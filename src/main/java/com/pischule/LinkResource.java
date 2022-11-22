@@ -69,7 +69,7 @@ public class LinkResource {
                 .onItem().invoke(linksCount::set)
                 .flatMap(l -> Link.sumVisits(client))
                 .onItem().invoke(visitsCount::set)
-                .await().indefinitely();
+                .subscribe().with((it) -> Log.info("total count updated"));
     }
 
     @POST

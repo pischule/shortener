@@ -10,6 +10,7 @@
     <style>
         body {
             font-family: monospace;
+            padding: 3px;
         }
 
         main {
@@ -19,22 +20,21 @@
             height: 100vh;
         }
 
-        button {
-            border: none;
-            background-color: transparent;
-            font-size: 120%;
-        }
-
         a {
             color: black;
             text-decoration: none;
-            display: inline-block;
-            word-break: break-word;
+            overflow-wrap: anywhere;
+            border-bottom: solid black;
+        }
+
+        a:hover, a:active {
+            background-color: black;
+            color: white;
         }
 
         input {
             border: none;
-            border-bottom: solid rgba(0, 0, 0, 1) 0.1rem;
+            border-bottom: solid black 0.15rem;
         }
 
         input:focus {
@@ -52,6 +52,7 @@
             color: white;
             padding: 0.2rem;
             padding-inline: 0.4rem;
+            border: none;
         }
 
         input, button, p, a {
