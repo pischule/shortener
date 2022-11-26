@@ -4,83 +4,10 @@
     <meta charset="UTF-8">
     <link href="favicon-light.ico" rel="icon" media="(prefers-color-scheme: light)"/>
     <link href="favicon-dark.ico" rel="icon" media="(prefers-color-scheme: dark)"/>
+    <link href="/style.css" rel="stylesheet">
 
     <title>{#insert title}SHRINK{/insert}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --background: white;
-            --text: black;
-            --gray: #494949;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --background: #171717;
-                --text: #ffffff;
-                --gray: #a8a8a8;
-            }
-        }
-
-        body {
-            font-family: monospace;
-            padding: 3px;
-            background-color: var(--background);
-            color: var(--text);
-        }
-
-        main {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        a {
-            color: var(--text);
-            text-decoration: none;
-            overflow-wrap: anywhere;
-            border-bottom: solid var(--text);
-        }
-
-        a:hover, a:active {
-            background-color: var(--text);
-            color: var(--background);
-        }
-
-        input {
-            border: none;
-            border-bottom: solid var(--text) 0.15rem;
-            background-color: var(--background);
-            color: var(--text);
-        }
-
-        input:focus {
-            outline: none;
-            border-bottom: solid var(--text);
-        }
-
-        @media (max-width: 480px) {
-            input {
-                width: 230px;
-            }
-        }
-
-        button {
-            background-color: var(--text);
-            color: var(--background);
-            border: solid var(--text);
-        }
-
-        input, button, p, a {
-            font-size: 1.4em;
-        }
-
-        div.stats p {
-            color: var(--gray);
-            font-size: 110%;
-        }
-    </style>
 </head>
 <body>
 <main>

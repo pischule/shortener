@@ -1,0 +1,81 @@
+:root {
+    --accent: #e91e63
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: white;
+        --text: black;
+        --gray: #494949;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #171717;
+        --text: #ffffff;
+        --gray: #a8a8a8;
+    }
+}
+
+body {
+    font-family: monospace;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+a {
+    color: var(--text);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    border-bottom: solid var(--text);
+}
+
+a:hover, a:active {
+    background-color: var(--text);
+    color: var(--background);
+}
+
+input {
+    border: none;
+    border-bottom: solid var(--text) 0.15rem;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+input:focus {
+    outline: none;
+}
+
+@media (max-width: 480px) {
+    input {
+        width: 210px;
+    }
+}
+
+.button-shrink {
+    background-color: var(--text);
+    color: var(--background);
+    border: solid transparent;
+}
+
+.button-shrink:hover, .button-shrink:active {
+    background-color: var(--accent);
+    cursor: pointer;
+}
+
+input, button, p, a {
+    font-size: 1.4em;
+}
+
+div.stats p {
+    color: var(--gray);
+    font-size: 110%;
+}
