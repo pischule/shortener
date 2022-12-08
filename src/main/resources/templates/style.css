@@ -1,34 +1,23 @@
 :root {
   --accent: #e91e63;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: white;
-    --text: black;
-    --gray: #494949;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171717;
-    --text: #ffffff;
-    --gray: #a8a8a8;
-  }
+  --background: #171717;
+  --text: #ffffff;
+  --gray: #a8a8a8;
 }
 
 body {
+  margin: 0;
+  font-size: 16px;
   font-family: monospace;
   background-color: var(--background);
   color: var(--text);
-}
 
-main {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  height: 100vh;
+  align-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
 a {
@@ -46,7 +35,7 @@ a:active {
 
 input {
   border: none;
-  border-bottom: 3px solid var(--text);
+  border-bottom: 2px solid var(--text);
   background-color: var(--background);
   color: var(--text);
   caret-color: var(--accent);
@@ -62,16 +51,17 @@ input:focus {
   }
 }
 
-.button-shrink {
+button {
   background-color: var(--text);
   color: var(--background);
-  border: solid transparent;
+  border: solid 2px var(--text);
+  padding: 4px 8px;
 }
 
-.button-shrink:hover,
-.button-shrink:active {
+button:active,
+button:hover {
   background-color: var(--accent);
-  cursor: pointer;
+  border-color: var(--accent);
 }
 
 input,
@@ -84,4 +74,12 @@ a {
 div.stats p {
   color: var(--gray);
   font-size: 110%;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: white;
+    --text: black;
+    --gray: #494949;
+  }
 }
