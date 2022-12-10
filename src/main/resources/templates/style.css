@@ -3,8 +3,11 @@
   --background: #171717;
   --text: #ffffff;
   --gray: #a8a8a8;
+
+  --doc-height: 100%;
 }
 
+html,
 body {
   margin: 0;
   font-size: 16px;
@@ -17,7 +20,9 @@ body {
   justify-content: center;
   align-items: center;
   min-width: 320px;
-  min-height: 100vh;
+
+  height: 100vh;
+  height: var(--doc-height);
 }
 
 a {

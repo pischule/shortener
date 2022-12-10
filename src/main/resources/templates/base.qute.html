@@ -22,4 +22,12 @@
   <body>
     <main>{#insert}{/insert}</main>
   </body>
+  <script>
+    const documentHeight = () => {
+        const doc = document.documentElement
+        doc.style.setProperty('--doc-height', window.innerHeight + "px")
+    }
+    window.addEventListener(‘resize’, documentHeight)
+    documentHeight()
+  </script>
 </html>
