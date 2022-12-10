@@ -52,16 +52,18 @@ input:focus {
 }
 
 button {
-  background-color: var(--text);
+  background-color: var(--accent);
+  border-width: 0;
+
   color: var(--background);
-  border: solid 2px var(--text);
-  padding: 4px 8px;
+  padding: 3px 8px;
+
+  box-shadow: 3px 3px 0 0 var(--text);
 }
 
-button:active,
-button:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
+button:active {
+  box-shadow: 0 0 0 0;
+  transform: translate(3px, 3px);
 }
 
 input,
