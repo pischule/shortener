@@ -11,9 +11,12 @@ import org.hibernate.validator.constraints.URL;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse.Status;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -74,7 +77,7 @@ public class LinkResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Uni<Response> post(@RestForm @NotNull @NotBlank @URL String url) {
+    public Uni<Response> post(@RestForm @NotNull @Valid @NotBlank @URL String url) {
         Link link = new Link(idUtil.generate(), url, 0);
         linksCount.incrementAndGet();
         return link.save(client)
@@ -114,4 +117,15 @@ public class LinkResource {
                 .onItem().ifNull().continueWith(
                         () -> Response.status(Response.Status.NOT_FOUND).build());
     }
+
+    @ServerExceptionMapper
+    public Response handleValidationError(ValidationException exception) {
+        Log.error(exception);
+        return Response
+                .status(400)
+                .entity(error.data("msg", exception.getMessage()).render())
+                .header("Content-Type", "text/html")
+                .build();
+    }
+
 }
