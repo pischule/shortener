@@ -1,10 +1,17 @@
 {#include base}
-    <form method="post">
-        <input type="url" id="url" name="url" autocomplete="off" placeholder="https://example.com">
-        <button class="button-shrink" type="submit">shrink</button>
-    </form>
-    <div class="stats">
-    <p>total links: {links}</p>
-    <p>total clicks: {visits}</p>
-    </div>
+<form method="post">
+  <input
+    type="url"
+    id="url"
+    required="true"
+    name="url"
+    autocomplete="off"
+    placeholder="https://example.com"
+  />
+  <button class="button-shrink" type="submit">shrink</button>
+</form>
+<div class="stats">
+  <p>total links: {links}</p>
+  <p>total clicks: {visits}</p>
+</div>
 {/include}
