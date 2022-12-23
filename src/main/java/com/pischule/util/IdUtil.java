@@ -1,4 +1,4 @@
-package com.pischule;
+package com.pischule.util;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 

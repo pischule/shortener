@@ -1,4 +1,4 @@
-package com.pischule;
+package com.pischule.entity;
 
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
