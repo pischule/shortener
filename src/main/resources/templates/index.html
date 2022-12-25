@@ -1,17 +1,17 @@
 {#include base}
+  <hgroup>
+    <h1>📎 Simple URL Shortener</h1>
+    <h2>Shorten your URL</h2>
+  </hgroup>
 <form hx-boost="true" method="post">
   <input
     type="url"
-    id="url"
     required="required"
     name="url"
     autocomplete="off"
     placeholder="https://example.com"
+    aria-label="url"
   />
-  <button class="button-shrink" type="submit">shrink</button>
+  <button class="button-shrink" type="submit">Shorten</button>
 </form>
-<div class="stats">
-  <p>total links: {links}</p>
-  <p>total clicks: {visits}</p>
-</div>
 {/include}

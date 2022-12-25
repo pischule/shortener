@@ -38,11 +38,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-scheduler</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-reactive-pg-client</artifactId>
+      <artifactId>quarkus-hibernate-orm-panache</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -60,7 +56,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-qute</artifactId>
@@ -74,7 +69,20 @@
       <artifactId>htmx.org</artifactId>
       <version>1.8.4</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.webjars.bowergithub.picocss</groupId>
+      <artifactId>pico</artifactId>
+      <version>1.5.6</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aventrix.jnanoid</groupId>
+      <artifactId>jnanoid</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>io.quarkus</groupId>-->
+<!--      <artifactId>quarkus-elytron-security-oauth2</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
@@ -84,11 +92,6 @@
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.aventrix.jnanoid</groupId>
-      <artifactId>jnanoid</artifactId>
-      <version>2.0.0</version>
     </dependency>
   </dependencies>
   <build>

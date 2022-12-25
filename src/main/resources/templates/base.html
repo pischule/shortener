@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <link rel="icon" href="/favicon-dark.ico" media="(prefers-color-scheme: dark)"/>
+    <link rel="icon" href="/favicon-light.ico"/>
+
+    <link rel="stylesheet" href="/webjars/pico/css/pico.min.css"/>
+    <script src="/webjars/htmx.org/dist/htmx.min.js"></script>
+
+    <title>{#insert title}SUS{/insert}</title>
+
+</head>
+<body>
+<nav class="container-fluid">
+    <ul>
+        <li><a class="contrast" href="/"><strong>SUS</strong></a></li>
+    </ul>
+    <ul>
+        <li><a href="#" role="button" class="contrast outline">Login</a></li>
+    </ul>
+</nav>
+<main class="container">
+    {#insert}{/insert}
+</main>
+</body>
+</html>

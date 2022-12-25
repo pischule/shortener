@@ -1,0 +1,10 @@
+{#include base}
+    <article>
+    <h1>Shortened link</h1>
+    <ul>
+    <li>Link: <a href="../../{link.id}">{baseUrl}/{link.id}</a></li>
+    <li>Original url: <a href="{link.url}">{link.url}</a></li>
+    <li>Clicks: {link.visits}</li>
+    </ul>
+    </article>
+{/include}
