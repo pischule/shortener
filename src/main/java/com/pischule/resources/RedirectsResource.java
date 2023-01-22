@@ -25,7 +25,7 @@ public class RedirectsResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/{id:[A-Za-z0-9_-]{8}}")
+    @Path("/{id:[A-Za-z0-9_-]{5,8}}")
     @Blocking
     @Transactional
     public Response redirect(@RestPath String id) {

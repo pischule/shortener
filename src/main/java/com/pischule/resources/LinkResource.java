@@ -26,10 +26,9 @@ public class LinkResource {
     @ConfigProperty(name = "base-url")
     String baseUrl;
 
-
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/{id:[A-Za-z0-9_-]{8}}")
+    @Path("/{id:[A-Za-z0-9_-]{5,8}}")
     public TemplateInstance get(@RestPath String id) {
         Link link = Link.findById(id);
         if (link == null) {

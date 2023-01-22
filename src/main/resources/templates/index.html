@@ -1,17 +1,22 @@
 {#include base}
-  <hgroup>
-    <h1>SUS</h1>
-    <h2>Simple URL Shortener</h2>
-  </hgroup>
-<form hx-boost="true" method="post">
-  <input
-    type="url"
-    required="required"
-    name="url"
-    autocomplete="off"
-    placeholder="https://example.com"
-    aria-label="url"
-  />
-  <button class="button-shrink" type="submit">Shorten</button>
-</form>
+    <hgroup>
+        <h1>SUS</h1>
+        <h2>Simple URL Shortener</h2>
+    </hgroup>
+
+    <form method="post">
+    <input
+            hx-boost="true"
+            type="url"
+            required="required"
+            name="url"
+            autocomplete="off"
+            placeholder="https://example.com"
+            aria-label="url"
+            value="{url}"
+            {#if error != null}aria-invalid="true"{/if}
+    />
+    {#if error != null}<small>{error}</small>{/if}
+    <button type="submit">Short</button>
+    </form>
 {/include}
