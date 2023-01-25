@@ -2,6 +2,7 @@ package com.pischule.resources;
 
 import com.pischule.entity.Link;
 import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -27,7 +28,7 @@ public class HistoryResource {
     @Transactional
     public TemplateInstance get(@RestQuery Integer page) {
         var panachePage = Page.of(Objects.requireNonNullElse(page, 0), 30);
-        var links = Link.findAll().page(panachePage).list();
+        var links = Link.findAll(Sort.descending("createdAt")).page(panachePage).list();
 
         var template = history;
         if (page != null) {
