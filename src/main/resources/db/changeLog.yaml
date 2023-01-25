@@ -30,10 +30,21 @@ databaseChangeLog:
                     nullable: false
                   defaultValueComputed: now()
   - changeSet:
-      id: 2
+      id: '2'
       author: pischule
       changes:
         - modifyDataType:
             tableName: link
             columnName: url
             newDataType: text
+  - changeSet:
+      id: '3'
+      author: pischule
+      changes:
+        - createIndex:
+            indexName: idx_created_at_desc
+            tableName: link
+            columns:
+              - column:
+                  name: created_at
+                  descending: true

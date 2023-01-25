@@ -1,5 +1,5 @@
 {#include base}
-    <h1>Shortened URL</h1>
+    <h2>Shortened URL</h2>
 
     <input id="input" readonly value="{baseUrl}/{link.id}" aria-label="short url"/>
     <button id="button">Copy</button>
@@ -8,6 +8,8 @@
         <li>Original URL: <a href="{link.url}">{link.url}</a></li>
         <li>Total clicks: {link.visits}</li>
     </ul>
+
+    <p><a href="/">Create another</a></p>
 
     <script>
         let timeoutId = null;

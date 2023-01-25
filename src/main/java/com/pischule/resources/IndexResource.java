@@ -4,10 +4,10 @@ import com.pischule.entity.Link;
 import com.pischule.services.LinkService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
 import org.jboss.resteasy.reactive.RestForm;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
@@ -18,8 +18,8 @@ import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.FOUND;
 
-@ApplicationScoped
 @Path("/")
+@Produces(MediaType.APPLICATION_JSON)
 public class IndexResource {
     @Inject
     Template index;
@@ -55,5 +55,12 @@ public class IndexResource {
 
         var uri = URI.create("/v/" + link.id);
         return Response.status(FOUND).location(uri).build();
+    }
+
+    @Authenticated
+    @Path("/login")
+    @GET
+    public Response login() {
+        return Response.seeOther(URI.create("/")).build();
     }
 }
