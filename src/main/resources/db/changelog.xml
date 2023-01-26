@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="1" author="pischule">
+        <createTable tableName="link">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="url" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visits" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="pischule">
+        <modifyDataType tableName="link" columnName="url" newDataType="text"/>
+    </changeSet>
+    <changeSet id="3" author="pischule">
+        <createIndex tableName="link" indexName="idx_created_at_desc">
+            <column name="created_at" descending="true"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
