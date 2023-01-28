@@ -45,8 +45,8 @@ public class IndexResource {
     public Response post(@RestForm String url) {
         Link link;
         try {
-            link = linkService.saveUrl(url);
             new URI(url);
+            link = linkService.saveUrl(url);
         } catch (ConstraintViolationException e) {
             var violation = e.getConstraintViolations().iterator().next();
             var body = index
