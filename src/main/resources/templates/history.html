@@ -4,10 +4,9 @@
     <table>
     <thead>
     <tr>
-        <th scope="col">Created</th>
-        <th scope="col">Short link</th>
+        <th scope="col">Link</th>
         <th scope="col">Clicks</th>
-        <th scope="col">Original</th>
+        <th scope="col">Original url</th>
     </tr>
     </thead>
     <tbody>
@@ -22,8 +21,7 @@
             {/if}
             >
 
-            <td>{it.createdAt.format('d MMM uuuu')}</td>
-            <td><a href="{it.id}">{baseUrl}/{it.id}</a></td>
+            <td><a href="{it.id}">{it.id}</a></td>
             <td>{it.visits}</td>
             <td><a href="{it.url}">{it.url}</a></td>
             </tr>
