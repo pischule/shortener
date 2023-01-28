@@ -1,13 +1,16 @@
 {#include base}
     <h2>Shortened URL</h2>
 
-    <input id="input" readonly value="{baseUrl}/{link.id}" aria-label="short url"/>
-    <button class="secondary" id="button">Copy</button>
+    <article>
+        <input id="input" readonly value="{baseUrl}/{link.id}" aria-label="short url"/>
+        <button class="secondary" id="button">Copy</button>
 
-    <ul>
-        <li>Original URL: <a href="{link.url}">{link.url}</a></li>
-        <li>Total clicks: {link.visits}</li>
-    </ul>
+        <ul>
+            <li>Original URL: <a href="{link.url}">{link.url}</a></li>
+            <li>Total clicks: {link.visits}</li>
+            <li>Created at {link.createdAt.format('d MMM uuuu')}</li>
+        </ul>
+    </article>
 
     <p><a href="/">Create another</a></p>
 
