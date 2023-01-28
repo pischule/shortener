@@ -15,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import static javax.ws.rs.core.Response.Status.FOUND;
 
@@ -45,10 +46,16 @@ public class IndexResource {
         Link link;
         try {
             link = linkService.saveUrl(url);
+            new URI(url);
         } catch (ConstraintViolationException e) {
             var violation = e.getConstraintViolations().iterator().next();
             var body = index
                     .data("error", violation.getMessage())
+                    .data("url", url);
+            return Response.status(400).entity(body).build();
+        } catch (URISyntaxException e) {
+            var body = index
+                    .data("error", "Invalid URL")
                     .data("url", url);
             return Response.status(400).entity(body).build();
         }
