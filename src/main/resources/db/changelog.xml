@@ -28,4 +28,9 @@
             <column name="created_at" descending="true"/>
         </createIndex>
     </changeSet>
+    <changeSet id="4" author="pischule">
+        <addColumn tableName="link">
+            <column name="creator" type="text"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

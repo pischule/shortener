@@ -1,36 +1,55 @@
 {#include base}
-    <h2>Shortened URL</h2>
+    {#title}SUS: {link.id}{/}
+
+    <hgroup>
+        <h2>Shortened URL</h2>
+        <h3>{link.id}</h3>
+    </hgroup>
 
     <article>
-        <input id="input" readonly value="{baseUrl}/{link.id}" aria-label="short url"/>
-        <button class="secondary" id="button">Copy</button>
+        <input id="input"
+               type="url"
+               readonly
+               name="url"
+               value="{baseUrl}/{link.id}"
+               aria-label="short url"/>
+        <div class="grid">
+            <button class="secondary" id="button">Copy</button>
+            {#if isCreator}
+                <button hx-get="/l/{link.id}/edit" hx-target="body" hx-push-url="true">Edit</button>
+            {/if}
+        </div>
 
         <ul>
-            <li>Original URL: <a href="{link.url}">{link.url}</a></li>
+            <li>Destination: <a href="{link.url}">{link.url}</a></li>
             <li>Total clicks: {link.visits}</li>
-            <li>Created at {link.createdAt.format('d MMM uuuu')}</li>
+            <li>Create date: {link.createdAt.format('d MMM uuuu')}</li>
         </ul>
     </article>
 
     <p><a href="/">Create another</a></p>
 
-    <script>
-        let timeoutId = null;
+    {#script}
+        <script>
+            {
+                let timeoutId = null;
 
-        const input = document.querySelector("#input");
-        const button = document.querySelector("#button");
+                const input = document.querySelector("#input");
+                const button = document.querySelector("#button");
 
-        function copy() {
-            input.select();
-            document.execCommand("copy")
-            button.textContent = 'Copied';
+                function copy() {
+                    input.select();
+                    document.execCommand("copy")
+                    button.textContent = 'Copied';
 
-            clearInterval(timeoutId);
-            timeoutId = setTimeout(() => {
-                button.textContent = 'Copy';
-            }, 1000);
-        }
+                    clearInterval(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        button.textContent = 'Copy';
+                    }, 1000);
+                }
 
-        button.addEventListener('click', copy);
-    </script>
+                button.addEventListener('click', copy);
+            }
+        </script>
+        {/}
 {/include}

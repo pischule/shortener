@@ -1,0 +1,37 @@
+{#include base}
+    {#title}SUS: {link.id}{/}
+
+    <hgroup>
+        <h2>Edit URL</h2>
+        <h3>{link.id}</h3>
+    </hgroup>
+
+    <article>
+    <label>Short url:
+        <input readonly value="{baseUrl}/{link.id}">
+    </label>
+
+    <form action="./" method="post">
+    <label>
+        Destination
+        <input
+                type="url"
+                required="required"
+                name="url"
+                autocomplete="off"
+                aria-label="url"
+                value="{link.url}"
+                {#if error != null}aria-invalid="true"{/if}
+        />
+    </label>
+    {#if error != null}<small>{error}</small>{/if}
+
+    <div class="grid">
+        <button hx-get="./" hx-target="body" hx-push-url="true" class="secondary">Cancel</button>
+        <button type="submit">Save</button>
+        <button hx-delete="./" hx-target="body" hx-push-url="true" class="outline">Delete</button>
+    </div>
+    </form>
+    </article>
+    <p><a href="/">Create another</a></p>
+{/include}

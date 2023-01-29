@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/webjars/pico/css/pico.min.css"/>
     <script src="/webjars/htmx.org/dist/htmx.min.js"></script>
 
-    <title>{#insert title}SUS{/insert}</title>
+    <title>{#insert title}SUS{/}</title>
 
 </head>
 <body>
@@ -19,14 +19,29 @@
     <ul>
         <li><a class="contrast" href="/"><strong>SUS</strong></a></li>
     </ul>
-    <ul>
-        <li>
-            <a href="/history">History</a>
-        </li>
-    </ul>
+
+    {#if loggedIn}
+        <ul>
+            <li>
+                <a href="/links">My Links</a>
+            </li>
+            <li>
+                <a class="outline" role="button" href="/auth/logout">Logout</a>
+            </li>
+        </ul>
+    {#else}
+        <ul>
+            <li>
+                <a role="button" href="javascript:location.href='/auth/login?redirect=' + encodeURIComponent(location.href)">
+                    Login
+                </a>
+            </li>
+        </ul>
+    {/if}
 </nav>
 <main class="container">
-    {#insert}{/insert}
+    {#insert}{/}
 </main>
+{#insert script}{/}
 </body>
 </html>

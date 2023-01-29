@@ -10,6 +10,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 
 @ApplicationScoped
@@ -22,11 +24,20 @@ public class LinkService {
     }
 
     @Transactional
-    public Link saveUrl(@Valid @NotNull @URL @Length(max = 2048) String url) {
+    public Link saveUrl(@Valid @NotNull @URL @Length(max = 2048) String url, String creator) throws URISyntaxException {
+        new URI(url);
         var link = new Link();
         link.id = generateId();
         link.url = url;
+        link.creator = creator;
         link.persist();
+        return link;
+    }
+
+    @Transactional
+    public Link updateUrl(Link link, @Valid @NotNull @URL @Length(max = 2048) String newUrl) throws URISyntaxException {
+        new URI(newUrl);
+        link.url = newUrl;
         return link;
     }
 

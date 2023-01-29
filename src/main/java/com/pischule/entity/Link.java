@@ -16,4 +16,5 @@ public class Link extends PanacheEntityBase {
     public long visits;
     @Column(insertable = false)
     public ZonedDateTime createdAt;
+    public String creator;
 }
