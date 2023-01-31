@@ -1,0 +1,29 @@
+/* Red Light scheme (Default) */
+/* Can be forced with data-theme="light" */
+[data-theme="light"],
+:root:not([data-theme="dark"]) .red {
+    --primary: #e53935;
+    --primary-hover: #d32f2f;
+    --primary-focus: rgba(229, 57, 53, 0.125);
+    --primary-inverse: #FFF;
+}
+
+/* Red Dark scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .red {
+        --primary: #e53935;
+        --primary-hover: #f44336;
+        --primary-focus: rgba(229, 57, 53, 0.25);
+        --primary-inverse: #FFF;
+    }
+}
+
+/* Red Dark scheme (Forced) */
+/* Enabled if forced with data-theme="dark" */
+[data-theme="dark"] .red {
+    --primary: #e53935;
+    --primary-hover: #f44336;
+    --primary-focus: rgba(229, 57, 53, 0.25);
+    --primary-inverse: #FFF;
+}

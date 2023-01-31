@@ -1,52 +1,43 @@
 package com.pischule.resources;
 
-import com.pischule.entity.Link;
-import io.quarkus.oidc.IdToken;
+import com.pischule.services.LinkService;
 import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.JsonWebToken;
+import io.smallrye.common.annotation.Blocking;
 import org.jboss.resteasy.reactive.RestQuery;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.Objects;
 
-@ApplicationScoped
-@Authenticated
-@Path("/links")
+@Blocking
+@Produces(MediaType.TEXT_HTML)
+@Path("links")
 public class LinksResource {
     @Inject
     Template links;
 
-    @ConfigProperty(name = "base-url")
-    String baseUrl;
-
     @Inject
-    @IdToken
-    JsonWebToken idToken;
+    LinkService linkService;
 
     @GET
-    @Transactional
-    public TemplateInstance get(@RestQuery Integer page) {
-        var panachePage = Page.of(Objects.requireNonNullElse(page, 0), 30);
-        var creator = idToken.getSubject();
-        var linkList = Link.find("creator", Sort.descending("createdAt"), creator).page(panachePage).list();
+    @Authenticated
+    public TemplateInstance get(@RestQuery("page") Integer pageIndex) {
+        final var pageSize = 30;
+        var panachePage = Page.of(Objects.requireNonNullElse(pageIndex, 0), pageSize);
+        var linkList = linkService.getAllOwned(panachePage);
 
         var template = links;
-        if (page != null) {
+        if (pageIndex != null) {
             template = links.getFragment("items");
         }
 
         return template
-                .data("baseUrl", baseUrl)
-                .data("loggedIn", idToken.getSubject())
                 .data("nextPage", panachePage.next().index)
                 .data("links", linkList);
     }

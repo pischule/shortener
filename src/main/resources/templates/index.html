@@ -5,6 +5,7 @@
     </hgroup>
 
     <form method="post">
+    <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
     <input
             hx-boost="true"
             type="url"
@@ -13,10 +14,10 @@
             autocomplete="off"
             placeholder="https://example.com"
             aria-label="url"
-            value="{url}"
-            {#if error != null}aria-invalid="true"{/if}
+            value="{url ?: ''}"
+            {#if error}aria-invalid="true"{/if}
     />
-    {#if error != null}<small>{error}</small>{/if}
+    {#if error}<small>{error}</small>{/if}
     <button type="submit">Short</button>
     </form>
 {/include}
