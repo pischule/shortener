@@ -1,0 +1,11 @@
+{
+    "name": "Shortener",
+    "short_name": "Shortener",
+    "icons": [{
+        "src": "google-touch-icon.png",
+        "sizes": "512x512"
+    }],
+    "background_color": "#1095c1",
+    "theme_color": "#1095c1",
+    "display": "fullscreen"
+}
