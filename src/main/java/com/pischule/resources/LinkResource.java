@@ -1,7 +1,6 @@
 package com.pischule.resources;
 
 import com.pischule.services.LinkService;
-import com.pischule.services.SecurityService;
 import io.quarkus.logging.Log;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
@@ -31,16 +30,10 @@ public class LinkResource {
     Template edit;
 
     @Inject
-    Template error;
-
-    @Inject
     LinkService linkService;
 
     @Inject
     Template redirect;
-
-    @Inject
-    SecurityService securityService;
 
     @GET
     public Response redirect(@RestPath String id) {
