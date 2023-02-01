@@ -36,8 +36,7 @@
     {#else}
         <ul>
             <li>
-                <a role="button"
-                   href="javascript:location.href='/sign-in?redirect=' + encodeURIComponent(location.href)">
+                <a role="button" href="/sign-in?redirect={inject:vertxRequest.uri}">
                     Sign in
                 </a>
             </li>
