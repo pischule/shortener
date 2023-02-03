@@ -21,4 +21,10 @@
     {#if error}<small>{error}</small>{/if}
     <button type="submit">Short</button>
     </form>
+
+    {#footer}
+        <small>
+            Total links: {stats.links} • Total clicks: {stats.visits}
+        </small>
+    {/}
 {/include}

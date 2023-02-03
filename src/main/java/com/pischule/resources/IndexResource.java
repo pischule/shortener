@@ -34,6 +34,7 @@ public class IndexResource {
     public TemplateInstance get() {
         return index
                 .data("error", null)
+                .data("stats", linkService.getStats())
                 .data("url", null);
     }
 
@@ -46,6 +47,7 @@ public class IndexResource {
         } catch (ConstraintViolationException | URISyntaxException e) {
             var body = index
                     .data("error", "Invalid URL")
+                    .data("stats", linkService.getStats())
                     .data("url", url);
             return Response.status(400).entity(body).build();
         }

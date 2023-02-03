@@ -2,6 +2,7 @@ package com.pischule.services;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.pischule.dto.LinkDto;
+import com.pischule.dto.StatsDto;
 import com.pischule.entity.Link;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
@@ -103,5 +104,11 @@ public class LinkService {
 
     public String generateId() {
         return NanoIdUtils.randomNanoId(random, NanoIdUtils.DEFAULT_ALPHABET, 5);
+    }
+
+    public StatsDto getStats() {
+        return (StatsDto) Link.getEntityManager()
+                .createQuery("select new com.pischule.dto.StatsDto(count(1), sum(l.visits)) from Link l")
+                .getSingleResult();
     }
 }
