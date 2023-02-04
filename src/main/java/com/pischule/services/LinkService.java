@@ -25,6 +25,9 @@ import java.util.List;
 
 @ApplicationScoped
 public class LinkService {
+    private static final char[] BASE58_ALPHABET =
+            "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+
     private SecureRandom random;
 
     @Inject
@@ -103,7 +106,7 @@ public class LinkService {
     }
 
     public String generateId() {
-        return NanoIdUtils.randomNanoId(random, NanoIdUtils.DEFAULT_ALPHABET, 5);
+        return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 5);
     }
 
     public StatsDto getStats() {
