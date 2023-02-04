@@ -27,7 +27,3 @@
     --primary-focus: rgba(229, 57, 53, 0.25);
     --primary-inverse: #FFF;
 }
-
-div > a[role="button"] {
-    width: 100%;
-}
