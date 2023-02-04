@@ -1,10 +1,7 @@
 {#include base}
     {#title}SUS: {link.id}{/}
 
-    <hgroup>
-        <h2>Shortened URL</h2>
-        <h3>{link.id}</h3>
-    </hgroup>
+    <h1>Short link</h1>
 
     <article>
         <input id="input"
@@ -16,7 +13,7 @@
         <div class="grid">
             <button class="secondary" id="button">Copy</button>
             {#if link.owner}
-                <button hx-get="/{link.id}/edit" hx-target="body" hx-push-url="true">Edit</button>
+                <div><a href="./edit" role="button">Edit</a></div>
             {/if}
         </div>
 
