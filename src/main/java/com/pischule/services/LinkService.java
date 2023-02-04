@@ -6,15 +6,11 @@ import com.pischule.dto.StatsDto;
 import com.pischule.entity.Link;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
@@ -42,11 +38,10 @@ public class LinkService {
     }
 
     @Transactional
-    public Link saveUrl(@Valid @NotNull @URL @Length(max = 2048) String url) throws URISyntaxException {
-        new URI(url);
+    public Link saveUrl(String url) throws IllegalArgumentException {
         var link = new Link();
         link.id = generateId();
-        link.url = url;
+        link.url = validateUrl(url).toString();
         link.creator = securityService.getUserId();
         link.persist();
         return link;
@@ -65,13 +60,12 @@ public class LinkService {
     }
 
     @Transactional
-    public LinkDto updateUrl(String id, @Valid @NotNull @URL @Length(max = 2048) String newUrl) throws URISyntaxException {
+    public LinkDto updateUrl(String id, String newUrl) throws IllegalArgumentException {
         Link link = findOrThrow(id);
         if (!isOwner(link)) {
             throw new ForbiddenException("You dont own link " + link.id);
         }
-        new URI(newUrl);
-        link.url = newUrl;
+        link.url = validateUrl(newUrl).toString();
         return linkToDto(link);
     }
 
@@ -103,6 +97,22 @@ public class LinkService {
 
     private boolean isOwner(Link link) {
         return link.creator != null && link.creator.equals(securityService.getUserId());
+    }
+
+    public URI validateUrl(String url) throws IllegalArgumentException {
+        if (url == null || url.isBlank()) {
+            throw new IllegalArgumentException("Cannot be blank");
+        }
+
+        if (url.length() > 2048) {
+            throw new IllegalArgumentException("Too long");
+        }
+
+        try {
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL");
+        }
     }
 
     public String generateId() {

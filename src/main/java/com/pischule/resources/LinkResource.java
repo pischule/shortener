@@ -11,12 +11,10 @@ import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import javax.inject.Inject;
-import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 @Path("{id:[A-Za-z0-9_-]{5}}")
 @Produces(MediaType.TEXT_HTML)
@@ -66,11 +64,14 @@ public class LinkResource {
     public Response updateLink(@RestPath String id, @RestForm String url) {
         var link = linkService.getById(id);
         try {
+            if (link.redirect().equalsIgnoreCase(url)) {
+                throw new IllegalArgumentException("Can't be the same as redirect");
+            }
             linkService.updateUrl(id, url);
-        } catch (URISyntaxException | ValidationException e) {
+        } catch (IllegalArgumentException e) {
             var body = edit
                     .data("link", link)
-                    .data("error", "Invalid URL")
+                    .data("error", e.getMessage())
                     .data("url", url);
             return Response.status(400).entity(body).build();
         }

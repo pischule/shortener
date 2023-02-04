@@ -10,13 +10,11 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestQuery;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static javax.ws.rs.core.Response.Status.FOUND;
 
@@ -44,9 +42,9 @@ public class IndexResource {
         Link link;
         try {
             link = linkService.saveUrl(url);
-        } catch (ConstraintViolationException | URISyntaxException e) {
+        } catch (IllegalArgumentException e) {
             var body = index
-                    .data("error", "Invalid URL")
+                    .data("error", e.getMessage())
                     .data("stats", linkService.getStats())
                     .data("url", url);
             return Response.status(400).entity(body).build();
