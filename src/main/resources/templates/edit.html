@@ -15,19 +15,19 @@
     <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}" form="form-delete"/>
 
     <label>
-        Destination
-        <input
-                type="url"
-                required="required"
-                name="url"
-                autocomplete="off"
-                aria-label="url"
-                value="{link.destination}"
-                form="form-update"
-                {#if error != null}aria-invalid="true"{/if}
-        />
-    </label>
+    Destination
+    <input
+            type="url"
+            required="required"
+            name="url"
+            autocomplete="off"
+            aria-label="url"
+            value="{link.destination}"
+            form="form-update"
+            {#if error != null}aria-invalid="true"{/if}
+    />
     {#if error}<small>{error}</small>{/if}
+    </label>
 
     <div class="grid">
         <button hx-get="./view" hx-target="body" hx-push-url="true" class="secondary">Cancel</button>
