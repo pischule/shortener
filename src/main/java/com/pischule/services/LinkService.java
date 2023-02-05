@@ -60,13 +60,12 @@ public class LinkService {
     }
 
     @Transactional
-    public LinkDto updateUrl(String id, String newUrl) throws IllegalArgumentException {
+    public void updateUrl(String id, String newUrl) throws IllegalArgumentException {
         Link link = findOrThrow(id);
         if (!isOwner(link)) {
             throw new ForbiddenException("You dont own link " + link.id);
         }
         link.url = validateUrl(newUrl).toString();
-        return linkToDto(link);
     }
 
     @Transactional
@@ -102,6 +101,10 @@ public class LinkService {
     public URI validateUrl(String url) throws IllegalArgumentException {
         if (url == null || url.isBlank()) {
             throw new IllegalArgumentException("Cannot be blank");
+        }
+
+        if (!url.startsWith("http")) {
+            throw new IllegalArgumentException("URL should start with http/https");
         }
 
         if (url.length() > 2048) {
