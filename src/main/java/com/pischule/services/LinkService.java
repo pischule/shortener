@@ -103,7 +103,7 @@ public class LinkService {
             throw new IllegalArgumentException("Cannot be blank");
         }
 
-        if (!url.matches("^https?://")) {
+        if (!url.matches("^https?://.+")) {
             throw new IllegalArgumentException("URL should start with http/https");
         }
 
