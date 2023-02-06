@@ -7,14 +7,14 @@
     </hgroup>
 
     <article>
-        <input id="input"
+        <input id="redirect-input"
                type="url"
                readonly
                name="url"
                value="{link.redirect}"
                aria-label="short url"/>
         <div class="grid">
-            <button class="secondary" id="button">Copy</button>
+            <button class="secondary" id="copy-redirect-button">Copy</button>
             {#if link.owner}
                 <button hx-get="/{link.id}/edit" hx-target="body" hx-push-url="true">Edit</button>
             {/if}
@@ -28,28 +28,4 @@
     </article>
 
     <p><a href="/">Create another</a></p>
-
-    {#script}
-        <script>
-            {
-                let timeoutId = null;
-
-                const input = document.querySelector("#input");
-                const button = document.querySelector("#button");
-
-                function copy() {
-                    input.select();
-                    document.execCommand("copy")
-                    button.textContent = 'Copied';
-
-                    clearInterval(timeoutId);
-                    timeoutId = setTimeout(() => {
-                        button.textContent = 'Copy';
-                    }, 1000);
-                }
-
-                button.addEventListener('click', copy);
-            }
-        </script>
-        {/}
 {/include}
