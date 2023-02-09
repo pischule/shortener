@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class LinkService {
@@ -86,7 +87,8 @@ public class LinkService {
     }
 
     private Link findOrThrow(String id) {
-        return (Link) Link.findByIdOptional(id).orElseThrow(() -> new NotFoundException("Link " + id + " not found"));
+        Optional<Link> optionalLink = Link.findByIdOptional(id);
+        return optionalLink.orElseThrow(() -> new NotFoundException("Link " + id + " not found"));
     }
 
     private LinkDto linkToDto(Link link) {
