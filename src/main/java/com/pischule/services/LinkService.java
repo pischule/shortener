@@ -121,7 +121,7 @@ public class LinkService {
     }
 
     public String generateId() {
-        return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 5);
+        return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 6);
     }
 
     public StatsDto getStats() {

@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-@Path("{id:[A-Za-z0-9_-]{5}}")
+@Path("{id:[A-Za-z0-9_-]{6}}")
 @Produces(MediaType.TEXT_HTML)
 @Blocking
 public class LinkResource {
