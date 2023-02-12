@@ -85,6 +85,6 @@ public class LinkResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response deleteLink(@RestPath String id) {
         linkService.delete(id);
-        return Response.seeOther(URI.create("/links")).build();
+        return Response.seeOther(URI.create("/my-links")).build();
     }
 }
