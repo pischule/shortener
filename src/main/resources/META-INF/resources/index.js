@@ -10,7 +10,7 @@ function copyRedirectToClipboard() {
 
     clearInterval(copyTimeoutID);
     copyTimeoutID = setTimeout(() => {
-        redirectInput.textContent = 'Copy';
+        copyRedirectButton.textContent = 'Copy';
     }, 1000);
 }
 
