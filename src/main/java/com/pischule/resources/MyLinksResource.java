@@ -17,10 +17,10 @@ import java.util.Objects;
 
 @Blocking
 @Produces(MediaType.TEXT_HTML)
-@Path("links")
-public class LinksResource {
+@Path("my-links")
+public class MyLinksResource {
     @Inject
-    Template links;
+    Template myLinks;
 
     @Inject
     LinkService linkService;
@@ -32,9 +32,9 @@ public class LinksResource {
         var panachePage = Page.of(Objects.requireNonNullElse(pageIndex, 0), pageSize);
         var linkList = linkService.getAllOwned(panachePage);
 
-        var template = links;
+        var template = myLinks;
         if (pageIndex != null) {
-            template = links.getFragment("items");
+            template = myLinks.getFragment("items");
         }
 
         return template
