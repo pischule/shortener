@@ -27,3 +27,13 @@
     --primary-focus: rgba(229, 57, 53, 0.25);
     --primary-inverse: #FFF;
 }
+
+.logo {
+    width: 2.7rem;
+    height: 2.7rem;
+    color: white;
+    background-color: var(--background-color);
+    padding: 5px;
+    border-radius: var(--border-radius);
+    border: var(--border-width) solid var(--primary);
+}
