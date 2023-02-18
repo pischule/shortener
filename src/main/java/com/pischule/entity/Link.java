@@ -2,6 +2,8 @@ package com.pischule.entity;
 
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,10 @@ public class Link extends PanacheEntityBase {
     public String id;
     public String url;
     public long visits;
-    @Column(insertable = false)
+    @CreationTimestamp
     public ZonedDateTime createdAt;
+    @Column
+    @UpdateTimestamp
+    public ZonedDateTime updatedAt;
     public String creator;
 }
