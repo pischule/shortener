@@ -33,3 +33,25 @@
     height: 2.7rem;
     padding: 5px;
 }
+
+body > footer ul li, body > footer ul {
+    padding: 0;
+    list-style: none;
+}
+
+body > footer ul li {
+    display: inline-block;
+}
+
+body > footer ul {
+    margin-bottom: .25rem;
+}
+
+body > footer li:not(:first-child)::before {
+    margin: 0 .25rem;
+    content: "·";
+}
+
+body > footer small {
+    color: var(--secondary);
+}

@@ -5,25 +5,25 @@
     </hgroup>
 
     <form method="post">
-    <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
-    <input
-            id="create-link-input"
-            type="url"
-            required="required"
-            name="url"
-            autocomplete="off"
-            placeholder="https://example.com"
-            aria-label="url"
-            value="{url ?: ''}"
-            {#if error}aria-invalid="true"{/if}
-    />
-    {#if error}<small>{error}</small>{/if}
-    <button type="submit">Short</button>
+        <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
+        <input
+                id="create-link-input"
+                type="url"
+                required="required"
+                name="url"
+                autocomplete="off"
+                placeholder="https://example.com"
+                aria-label="url"
+                value="{url ?: ''}"
+                {#if error}aria-invalid="true"{/if}
+        />
+        {#if error}<small>{error}</small>{/if}
+        <button type="submit">Short</button>
     </form>
 
     {#footer}
-        <small>
-            Total links: {stats.links} • Total clicks: {stats.visits}
-        </small>
-    {/}
+        <ul>
+        <li>Total links: {stats.links}</li><li>Total clicks: {stats.visits}</li>
+        </ul>
+        {/}
 {/include}
