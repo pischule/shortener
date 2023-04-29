@@ -1,19 +1,21 @@
 package com.pischule.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import java.net.URI;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 
-import static javax.ws.rs.core.Cookie.DEFAULT_VERSION;
+import java.net.URI;
 
 @Path("sign-out")
 public class SignOutResource {
     @GET
     public Response get() {
+        var sessionCookie = new NewCookie.Builder("q_session")
+                .maxAge(0)
+                .build();
         return Response.seeOther(URI.create("/"))
-                .cookie(new NewCookie("q_session", "", null, null, DEFAULT_VERSION, null, 0, null, false, false))
+                .cookie(sessionCookie)
                 .build();
     }
 }

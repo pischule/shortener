@@ -5,9 +5,9 @@ import io.quarkus.oidc.UserInfo;
 import io.smallrye.common.constraint.Nullable;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.util.Optional;
 
 @ApplicationScoped
