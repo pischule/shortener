@@ -1,0 +1,39 @@
+quarkus:
+  liquibase:
+    migrate-at-start: true
+  hibernate-orm:
+    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  http:
+    cors: true
+  oidc:
+    application-type: web_app
+    authentication:
+      redirect-path: /auth/redirect
+      restore-path-after-redirect: true
+    token-cache:
+      max-size: 1000
+      time-to-live: 3M
+      clean-up-timer-interval: 1M
+
+"%prod":
+  quarkus:
+    oidc:
+      provider: github
+    http:
+      proxy:
+        proxy-address-forwarding: true
+        allow-xforwarded: true
+        enable-forwarded-host: true
+        enable-forwarded-prefix: true
+      same-site-cookie:
+        "csrf-token":
+          value: Strict
+      header:
+        "Content-Security-Policy":
+          value: "default-src 'none'; style-src 'self' 'sha256-d7rFBVhb3n/Drrf+EpNWYdITkos3kQRFpB0oSOycXg4='; script-src 'self'; img-src 'self'; connect-src 'self'"
+        "X-Frame-Options":
+          value: "DENY"
+        "Strict-Transport-Security":
+          value: "max-age=31536000"
+        "X-Content-Type-Options":
+          value: "nosniff"

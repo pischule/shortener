@@ -28,4 +28,11 @@ public class SecurityService {
                         .map(it -> it.getLong("id"))
                         .map(it -> "github-" + it)).orElse(null);
     }
+
+    public String getUserName() {
+        return Optional.ofNullable(userInfo)
+                .filter(it -> userInfo.getJsonObject() != null)
+                .map(it -> it.getString("name"))
+                .orElse("User");
+    }
 }

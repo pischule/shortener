@@ -26,20 +26,21 @@
 
     {#if inject:securityService.userId}
         <ul>
-            <li>
-                <a href="/my-links">My Links</a>
-            </li>
-            <li>
-                <a class="outline" role="button" href="/sign-out">Sign out</a>
-            </li>
+        <li>
+            <a href="/my-links">My Links</a>
+        </li>
+        <li>
+        <a class="outline" role="button" href="/sign-out" data-tooltip="Signed in as {inject:securityService.userName}"
+        data-placement="left">Sign out</a>
+        </li>
         </ul>
     {#else}
         <ul>
-            <li>
-                <a class="outline" role="button" href="/sign-in?redirect={inject:vertxRequest.uri}">
-                    Sign in
-                </a>
-            </li>
+        <li>
+        <a class="outline" role="button" href="/sign-in?redirect={inject:vertxRequest.uri}">
+            Sign in with GitHub
+        </a>
+        </li>
         </ul>
     {/if}
 </nav>
