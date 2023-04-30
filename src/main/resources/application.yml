@@ -10,10 +10,13 @@ quarkus:
     authentication:
       redirect-path: /auth/callback
       restore-path-after-redirect: true
+      session-age-extension: P7D
     token-cache:
       max-size: 1000
       time-to-live: 3M
       clean-up-timer-interval: 1M
+    token:
+      refresh-expired: true
 
 "%prod":
   quarkus:
