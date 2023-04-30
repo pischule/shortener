@@ -8,7 +8,7 @@ quarkus:
   oidc:
     application-type: web_app
     authentication:
-      redirect-path: /auth/redirect
+      redirect-path: /auth/callback
       restore-path-after-redirect: true
     token-cache:
       max-size: 1000
