@@ -10,7 +10,6 @@ quarkus:
     authentication:
       redirect-path: /auth/callback
       restore-path-after-redirect: true
-      session-age-extension: P7D
     token-cache:
       max-size: 1000
       time-to-live: 3M
@@ -22,6 +21,8 @@ quarkus:
   quarkus:
     oidc:
       provider: github
+      authentication:
+        session-age-extension: P30D
     http:
       proxy:
         proxy-address-forwarding: true
