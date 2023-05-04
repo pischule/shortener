@@ -15,7 +15,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Build with Maven
+      - name: Compile
+        run: ./mvnw compile
+      - name: Build native image
         run: ./mvnw -B package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true
       - name: Docker Login
         uses: docker/login-action@v2.1.0
