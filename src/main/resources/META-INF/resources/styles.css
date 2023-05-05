@@ -55,3 +55,8 @@ body > footer li:not(:first-child)::before {
 body > footer small {
     color: var(--secondary);
 }
+
+a.fullwidth-button {
+    width: 100%;
+    margin-bottom: 20px;
+}

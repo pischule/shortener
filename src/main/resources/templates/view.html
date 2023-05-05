@@ -7,24 +7,24 @@
     </hgroup>
 
     <article>
-        <input id="redirect-input"
-               type="url"
-               readonly
-               name="url"
-               value="{link.redirect}"
-               aria-label="short url"/>
-        <div class="grid">
-            <button class="secondary" id="copy-redirect-button">Copy</button>
-            {#if link.owner}
-                <button hx-get="/{link.id}/edit" hx-target="body" hx-push-url="true">Edit</button>
-            {/if}
-        </div>
+    <input id="redirect-input"
+           type="url"
+           readonly
+           name="url"
+           value="{link.redirect}"
+           aria-label="short url"/>
+    <div class="grid">
+        <button class="secondary" id="copy-redirect-button">Copy</button>
+        {#if link.owner}
+            <a role="button" class="fullwidth-button" href="edit">Edit</a>
+        {/if}
+    </div>
 
-        <ul>
-            <li>Destination: <a href="{link.destination}">{link.destination}</a></li>
-            <li>Total clicks: {link.clicks}</li>
-            <li>Created at: {link.createdAt}</li>
-        </ul>
+    <ul>
+    <li>Destination: <a href="{link.destination}">{link.destination}</a></li>
+    <li>Total clicks: {link.clicks}</li>
+    <li>Created at: {link.createdAt}</li>
+    </ul>
     </article>
 
     <p><a href="/">Create another</a></p>

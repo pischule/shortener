@@ -4,10 +4,6 @@
     <h2>Edit URL</h2>
 
     <article>
-    <label>Short url:
-        <input readonly value="{link.redirect}">
-    </label>
-
     <form id="form-update" method="post"></form>
     <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}" form="form-update"/>
 
@@ -30,7 +26,7 @@
     </label>
 
     <div class="grid">
-        <button hx-get="./view" hx-target="body" hx-push-url="true" class="secondary">Cancel</button>
+        <a href="view" role="button" class="fullwidth-button secondary">Cancel</a>
         <button type="submit" form="form-update">Save</button>
         <button class="red" type="submit" type="submit" form="form-delete">Delete</button>
     </div>
