@@ -60,12 +60,4 @@ public class IndexResource {
     public Response singIn(@RestQuery String redirect) {
         return Response.temporaryRedirect(URI.create(redirect)).build();
     }
-
-//    @GET
-//    @Path("sign-out")
-//    public Response signOut() {
-//        return Response.seeOther(URI.create("/"))
-//                .cookie(new NewCookie("q_session", null, "/", null, null, 0, true))
-//                .build();
-//    }
 }
