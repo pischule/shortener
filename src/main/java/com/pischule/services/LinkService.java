@@ -4,6 +4,7 @@ import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.pischule.dto.LinkDto;
 import com.pischule.dto.StatsDto;
 import com.pischule.entity.Link;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.annotation.PostConstruct;
@@ -17,7 +18,6 @@ import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
-import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -81,9 +81,9 @@ public class LinkService {
         link.delete();
     }
 
-    public List<LinkDto> getAllOwned(Page page) {
-        List<Link> linkList = Link.find("creator", Sort.descending("createdAt"), securityService.getUserId()).page(page).list();
-        return linkList.stream().map(this::linkToDto).toList();
+    public PanacheQuery<Link> getOwned(Page page) {
+        return Link.find("creator", Sort.descending("createdAt"), securityService.getUserId())
+                .page(page);
     }
 
     private Link findOrThrow(String id) {

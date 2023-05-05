@@ -2,29 +2,43 @@
     <h2>My Links</h2>
 
     <figure>
-    <table>
-    <thead>
-    <tr>
-        <th scope="col">Link</th>
-        <th scope="col">Clicks</th>
-        <th scope="col">Destination</th>
-    </tr>
-    </thead>
-    <tbody>
-    {#fragment id = items}
-        {#for link in links}
-            {#if link_isLast}
-                <tr hx-get="?page={nextPage}" hx-trigger="revealed" hx-swap="afterend">
-            {#else}
-                <tr>
-            {/if}
-            <td><a href="/{link.id}/view">{link.id}</a></td>
-            <td>{link.clicks}</td>
-            <td><a href="{link.destination}">{link.destination}</a></td>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Link</th>
+                <th scope="col">Clicks</th>
+                <th scope="col">Destination</th>
             </tr>
-        {/for}
-    {/fragment}
-    </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {#fragment id = items}
+                {#for link in links}
+                    <tr>
+                    <td><a href="/{link.id}/view">{link.id}</a></td>
+                    <td>{link.visits}</td>
+                    <td><a href="{link.url}">{link.url}</a></td>
+                    </tr>
+                {/for}
+            {/fragment}
+            </tbody>
+        </table>
     </figure>
+
+    {#if totalCount > count}
+        <div class="pagination">
+        <span>
+        {#if page > 0}
+            <a href="?page={previousPage}">Previous</a>
+        {/if}
+        </span>
+
+        <span>{from}-{to} / {totalCount}</span>
+
+        <span>
+        {#if to < totalCount}
+        <a href="?page={nextPage}">Next</a>
+        {/if}
+        </span>
+        </div>
+    {/if}
 {/include}

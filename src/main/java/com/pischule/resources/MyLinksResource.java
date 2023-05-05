@@ -6,14 +6,13 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
-import org.jboss.resteasy.reactive.RestQuery;
-
 import jakarta.inject.Inject;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import java.util.Objects;
+import org.jboss.resteasy.reactive.RestQuery;
 
 @Blocking
 @Produces(MediaType.TEXT_HTML)
@@ -27,18 +26,20 @@ public class MyLinksResource {
 
     @GET
     @Authenticated
-    public TemplateInstance get(@RestQuery("page") Integer pageIndex) {
-        final var pageSize = 30;
-        var panachePage = Page.of(Objects.requireNonNullElse(pageIndex, 0), pageSize);
-        var linkList = linkService.getAllOwned(panachePage);
+    public TemplateInstance get(@RestQuery("page") @DefaultValue("0") Integer pageIndex) {
+        int pageSize = 20;
+        var panachePage = Page.of(pageIndex, pageSize);
+        var ownedLinksPortion = linkService.getOwned(panachePage).list();
+        var allOwnedLinks = linkService.getOwned(Page.ofSize(Integer.MAX_VALUE));
 
-        var template = myLinks;
-        if (pageIndex != null) {
-            template = myLinks.getFragment("items");
-        }
-
-        return template
+        return myLinks
+                .data("links", ownedLinksPortion)
+                .data("previousPage", panachePage.previous().index)
+                .data("page", pageIndex)
                 .data("nextPage", panachePage.next().index)
-                .data("links", linkList);
+                .data("from", pageIndex * pageSize + 1)
+                .data("to", pageIndex * pageSize + ownedLinksPortion.size())
+                .data("totalCount", allOwnedLinks.count())
+                .data("count", ownedLinksPortion.size());
     }
 }
