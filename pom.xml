@@ -15,6 +15,8 @@
     <quarkus.platform.version>3.2.2.Final</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0</surefire-plugin.version>
+
+    <org.jooq.version>3.18.5</org.jooq.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -98,7 +100,7 @@
     <dependency>
       <groupId>org.jooq</groupId>
       <artifactId>jooq-meta-extensions-liquibase</artifactId>
-      <version>3.18.5</version>
+      <version>${org.jooq.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -106,7 +108,7 @@
       <plugin>
         <groupId>org.jooq</groupId>
         <artifactId>jooq-codegen-maven</artifactId>
-        <version>3.18.5</version>
+        <version>${org.jooq.version}</version>
 
         <executions>
           <execution>
