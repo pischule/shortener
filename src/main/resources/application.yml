@@ -1,6 +1,6 @@
 quarkus:
   jooq:
-    dialect: Postgres
+    dialect: POSTGRES
   liquibase:
     migrate-at-start: true
   http:
