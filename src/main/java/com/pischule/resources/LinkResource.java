@@ -6,14 +6,14 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
-import org.jboss.resteasy.reactive.RestForm;
-import org.jboss.resteasy.reactive.RestPath;
-import org.jboss.resteasy.reactive.RestResponse;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.RestPath;
+import org.jboss.resteasy.reactive.RestResponse;
+
 import java.net.URI;
 
 @Path("{id:[A-Za-z0-9_-]{6}}")
@@ -36,10 +36,10 @@ public class LinkResource {
     @GET
     public Response redirect(@RestPath String id) {
         Log.infof("redirect, id=%s", id);
-        var uri = linkService.getUrlAndIncrementVisits(id);
+        var uri = linkService.incrementVisitsAndGetUri(id);
         return Response.status(RestResponse.Status.MOVED_PERMANENTLY)
                 .location(uri)
-                .entity(redirect.data("url", uri))
+                .entity(redirect.data("uri", uri))
                 .build();
     }
 
@@ -64,10 +64,7 @@ public class LinkResource {
     public Response updateLink(@RestPath String id, @RestForm String url) {
         var link = linkService.getById(id);
         try {
-            if (link.redirect().equalsIgnoreCase(url)) {
-                throw new IllegalArgumentException("Can't be the same as redirect");
-            }
-            linkService.updateUrl(id, url);
+            linkService.updateUrl(link, url);
         } catch (IllegalArgumentException e) {
             var body = edit
                     .data("link", link)

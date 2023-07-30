@@ -1,7 +1,6 @@
 package com.pischule.resources;
 
 import com.pischule.services.LinkService;
-import io.quarkus.panache.common.Page;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
@@ -28,18 +27,17 @@ public class MyLinksResource {
     @Authenticated
     public TemplateInstance get(@RestQuery("page") @DefaultValue("0") Integer pageIndex) {
         int pageSize = 20;
-        var panachePage = Page.of(pageIndex, pageSize);
-        var ownedLinksPortion = linkService.getOwned(panachePage).list();
-        var allOwnedLinks = linkService.getOwned(Page.ofSize(Integer.MAX_VALUE));
+        var ownedLinksPortion = linkService.getOwned(pageIndex, pageSize);
+        var allOwnedLinks = linkService.countOwned();
 
         return myLinks
                 .data("links", ownedLinksPortion)
-                .data("previousPage", panachePage.previous().index)
+                .data("previousPage", pageIndex - 1)
                 .data("page", pageIndex)
-                .data("nextPage", panachePage.next().index)
+                .data("nextPage", pageIndex + 1)
                 .data("from", pageIndex * pageSize + 1)
                 .data("to", pageIndex * pageSize + ownedLinksPortion.size())
-                .data("totalCount", allOwnedLinks.count())
+                .data("totalCount", allOwnedLinks)
                 .data("count", ownedLinksPortion.size());
     }
 }

@@ -4,7 +4,6 @@
     <h2>Edit URL</h2>
 
     <form method="post">
-    <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
 
     <label>
     Destination
@@ -14,7 +13,7 @@
             name="url"
             autocomplete="off"
             aria-label="url"
-            value="{link.destination}"
+            value="{link.url}"
             {#if error != null}aria-invalid="true"{/if}
     />
     {#if error}<small>{error}</small>{/if}

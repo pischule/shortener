@@ -5,7 +5,6 @@
     </hgroup>
 
     <form method="post">
-        <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
         <input
                 id="create-link-input"
                 type="url"
@@ -18,7 +17,7 @@
                 {#if error}aria-invalid="true"{/if}
         />
         {#if error}<small>{error}</small>{/if}
-        <button type="submit">Short</button>
+        <button type="submit">Shorten</button>
     </form>
 
     {#footer}

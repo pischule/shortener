@@ -1,18 +1,18 @@
 package com.pischule.resources;
 
-import com.pischule.entity.Link;
+import com.pischule.model.Link;
 import com.pischule.services.LinkService;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
-import org.jboss.resteasy.reactive.RestForm;
-import org.jboss.resteasy.reactive.RestQuery;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.RestQuery;
+
 import java.net.URI;
 
 import static jakarta.ws.rs.core.Response.Status.FOUND;
@@ -49,10 +49,9 @@ public class IndexResource {
             return Response.status(400).entity(body).build();
         }
 
-        var uri = URI.create(link.id + "/view");
+        var uri = URI.create(link.id() + "/view");
         return Response.status(FOUND).location(uri).build();
     }
-
 
     @GET
     @Authenticated

@@ -1,27 +1,34 @@
 package com.pischule.services;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.pischule.dto.LinkDto;
-import com.pischule.dto.StatsDto;
-import com.pischule.entity.Link;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
+import com.pischule.model.Link;
+import com.pischule.model.Stats;
 import jakarta.annotation.PostConstruct;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.UriInfo;
+import org.jooq.DSLContext;
+import org.jooq.Record1;
+import org.jooq.generated.tables.records.LinkRecord;
+
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
+
+import static org.jooq.generated.tables.Link.LINK;
+import static org.jooq.impl.DSL.*;
 
 @ApplicationScoped
 public class LinkService {
+
+    @Inject
+    DSLContext dsl;
+
     private static final char[] BASE58_ALPHABET =
             "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
 
@@ -33,71 +40,92 @@ public class LinkService {
     @Inject
     SecurityService securityService;
 
+    private static NotFoundException notFound() {
+        return new NotFoundException("Link not found");
+    }
+
     @PostConstruct
     void init() {
         random = new SecureRandom();
     }
 
     @Transactional
-    public Link saveUrl(String url) throws IllegalArgumentException {
-        var link = new Link();
-        link.id = generateId();
-        link.url = validateUrl(url).toString();
-        link.creator = securityService.getUserId();
-        link.persist();
-        return link;
+    public Link saveUrl(String url) {
+        var id = generateId();
+        var validatedUrl = validateUrl(url).toString();
+        return dsl.insertInto(LINK, LINK.ID, LINK.URL, LINK.CREATOR)
+                .values(id, validatedUrl, securityService.getUserId())
+                .returning()
+                .fetchOne(this::recordToDto);
     }
 
-    public LinkDto getById(String id) {
-        Link link = findOrThrow(id);
-        return linkToDto(link);
-    }
-
-    @Transactional
-    public URI getUrlAndIncrementVisits(String id) {
-        Link link = findOrThrow(id);
-        link.visits += 1;
-        return URI.create(link.url);
+    public Link getById(String id) {
+        return dsl.selectFrom(LINK)
+                .where(LINK.ID.eq(id))
+                .fetchOptional(this::recordToDto)
+                .orElseThrow(LinkService::notFound);
     }
 
     @Transactional
-    public void updateUrl(String id, String newUrl) throws IllegalArgumentException {
-        Link link = findOrThrow(id);
-        if (!isOwner(link)) {
-            throw new ForbiddenException("You dont own link " + link.id);
+    public URI incrementVisitsAndGetUri(String id) {
+        return dsl.update(LINK)
+                .set(LINK.VISITS, LINK.VISITS.plus(1))
+                .where(LINK.ID.eq(id))
+                .returning(LINK.URL)
+                .fetchOptional(LINK.URL)
+                .map(URI::create)
+                .orElseThrow(LinkService::notFound);
+    }
+
+    @Transactional
+    public void updateUrl(Link link, String newUrl) {
+        if (link.redirect().equalsIgnoreCase(newUrl)) {
+            throw new IllegalArgumentException("Can't be the same as redirect");
         }
-        link.url = validateUrl(newUrl).toString();
+
+        var validatedUrl = validateUrl(newUrl).toString();
+        dsl.update(LINK)
+                .set(LINK.URL, validatedUrl)
+                .where(LINK.ID.eq(link.id()))
+                .and(LINK.CREATOR.eq(securityService.getUserId()))
+                .execute();
     }
 
     @Transactional
     public void delete(String id) {
-        Link link = Link.findById(id);
-        if (link == null) {
-            return;
-        }
-        if (!isOwner(link)) {
-            throw new ForbiddenException("You dont own link " + link.id);
-        }
-        link.delete();
+        var creator = securityService.getUserId();
+        dsl.delete(LINK)
+                .where(LINK.ID.eq(id))
+                .and(LINK.CREATOR.eq(creator))
+                .execute();
     }
 
-    public PanacheQuery<Link> getOwned(Page page) {
-        return Link.find("creator", Sort.descending("createdAt"), securityService.getUserId())
-                .page(page);
+    public Integer countOwned() {
+        return dsl.selectCount()
+                .from(LINK)
+                .where(LINK.CREATOR.eq(securityService.getUserId()))
+                .fetchOne(Record1::value1);
     }
 
-    private Link findOrThrow(String id) {
-        Optional<Link> optionalLink = Link.findByIdOptional(id);
-        return optionalLink.orElseThrow(() -> new NotFoundException("Link " + id + " not found"));
+    public List<Link> getOwned(int page, int size) {
+        return dsl.selectFrom(LINK)
+                .where(LINK.CREATOR.eq(securityService.getUserId()))
+                .orderBy(LINK.CREATED_AT.desc())
+                .limit(size)
+                .offset(page * size)
+                .fetch(this::recordToDto);
     }
 
-    private LinkDto linkToDto(Link link) {
-        String absoluteUrl = uriInfo.getBaseUri().toString() + link.id;
-        return new LinkDto(link.id, absoluteUrl, link.url, link.visits, link.createdAt, isOwner(link));
-    }
-
-    private boolean isOwner(Link link) {
-        return link.creator != null && link.creator.equals(securityService.getUserId());
+    private Link recordToDto(LinkRecord r) {
+        String absoluteUrl = uriInfo.getBaseUri().toString() + r.getId();
+        var userId = securityService.getUserId();
+        boolean isOwner = userId != null && userId.equals(r.getCreator());
+        return new Link(r.getId(),
+                r.getUrl(),
+                absoluteUrl,
+                r.getVisits(),
+                r.getCreatedAt().toInstant(),
+                isOwner);
     }
 
     public URI validateUrl(String url) throws IllegalArgumentException {
@@ -124,9 +152,10 @@ public class LinkService {
         return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 6);
     }
 
-    public StatsDto getStats() {
-        return (StatsDto) Link.getEntityManager()
-                .createQuery("select new com.pischule.dto.StatsDto(count(1), sum(l.visits)) from Link l")
-                .getSingleResult();
+    public Stats getStats() {
+        return dsl.select(count(), coalesce(sum(LINK.VISITS)))
+                .from(LINK)
+                .fetchOne(r -> new Stats(r.value1().longValue(),
+                        Objects.requireNonNullElse(r.value2(), BigInteger.ZERO)));
     }
 }

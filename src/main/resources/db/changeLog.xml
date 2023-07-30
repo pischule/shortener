@@ -3,7 +3,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
     <changeSet id="1" author="pischule">
         <createTable tableName="link">
             <column name="id" type="varchar(36)">
@@ -15,7 +17,7 @@
             <column name="visits" type="bigint" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="timestamptz" defaultValueComputed="now()">
+            <column name="created_at" type="timestamp with time zone" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -35,7 +37,7 @@
     </changeSet>
     <changeSet id="5" author="pischule">
         <addColumn tableName="link">
-            <column name="updated_at" type="timestamptz" defaultValueComputed="now()">
+            <column name="updated_at" type="timestamp with time zone" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
