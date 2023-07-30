@@ -1,16 +1,14 @@
 package com.pischule.resources;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Disabled;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Test;
 
-import jakarta.ws.rs.core.MediaType;
-
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 @QuarkusTest
-@Disabled
 class IndexResourceTest {
 
     @Test
@@ -20,7 +18,7 @@ class IndexResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType(MediaType.TEXT_HTML)
-                .body(hasXPath("//*[@id=\"create-link-input\"]"));
+                .body(containsString("<input"), containsString("Shorten"));
     }
 
     @Test
@@ -32,5 +30,4 @@ class IndexResourceTest {
                 .contentType(MediaType.TEXT_HTML)
                 .body(containsString("Sign in"), not(containsString("My links")));
     }
-
 }
