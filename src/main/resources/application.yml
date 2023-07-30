@@ -3,8 +3,6 @@ quarkus:
     dialect: Postgres
   liquibase:
     migrate-at-start: true
-  hibernate-orm:
-    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
   http:
     cors: true
   oidc:
@@ -28,7 +26,7 @@ quarkus:
     http:
       proxy:
         proxy-address-forwarding: true
-        allow-xforwarded: true
+        allow-x-forwarded: true
         enable-forwarded-host: true
         enable-forwarded-prefix: true
       header:
