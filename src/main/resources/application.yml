@@ -3,6 +3,9 @@ quarkus:
     dialect: POSTGRES
   flyway:
     migrate-at-start: true
+  datasource:
+    jdbc:
+      transaction-isolation-level: repeatable-read
   http:
     cors: true
   oidc:
