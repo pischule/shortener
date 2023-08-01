@@ -23,6 +23,7 @@ import java.util.Objects;
 import static com.pischule.jooq.Tables.LINK;
 import static org.jooq.impl.DSL.*;
 
+@Transactional
 @ApplicationScoped
 public class LinkService {
 
@@ -46,17 +47,8 @@ public class LinkService {
 
     @PostConstruct
     void init() {
+        // for graalvm builds
         random = new SecureRandom();
-    }
-
-    @Transactional
-    public Link saveUrl(String url) {
-        var id = generateId();
-        var validatedUrl = validateUrl(url).toString();
-        return dsl.insertInto(LINK, LINK.ID, LINK.URL, LINK.CREATOR)
-                .values(id, validatedUrl, securityService.getUserId())
-                .returning()
-                .fetchOne(this::recordToDto);
     }
 
     public Link getById(String id) {
@@ -66,7 +58,6 @@ public class LinkService {
                 .orElseThrow(LinkService::notFound);
     }
 
-    @Transactional
     public URI incrementVisitsAndGetUri(String id) {
         return dsl.update(LINK)
                 .set(LINK.VISITS, LINK.VISITS.plus(1))
@@ -77,7 +68,19 @@ public class LinkService {
                 .orElseThrow(LinkService::notFound);
     }
 
-    @Transactional
+    public Link saveUrl(String url) {
+        var id = generateId();
+        var validatedUrl = validateUrl(url).toString();
+        return dsl.insertInto(LINK, LINK.ID, LINK.URL, LINK.CREATOR)
+                .values(id, validatedUrl, securityService.getUserId())
+                .returning()
+                .fetchOne(this::recordToDto);
+    }
+
+    private String generateId() {
+        return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 6);
+    }
+
     public void updateUrl(Link link, String newUrl) {
         if (link.redirect().equalsIgnoreCase(newUrl)) {
             throw new IllegalArgumentException("Can't be the same as redirect");
@@ -91,7 +94,26 @@ public class LinkService {
                 .execute();
     }
 
-    @Transactional
+    private URI validateUrl(String url) throws IllegalArgumentException {
+        if (url == null || url.isBlank()) {
+            throw new IllegalArgumentException("Cannot be blank");
+        }
+
+        if (!url.matches("^https?://.+")) {
+            throw new IllegalArgumentException("URL should start with http/https");
+        }
+
+        if (url.length() > 2048) {
+            throw new IllegalArgumentException("Too long");
+        }
+
+        try {
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL");
+        }
+    }
+
     public void delete(String id) {
         var creator = securityService.getUserId();
         dsl.delete(LINK)
@@ -116,6 +138,13 @@ public class LinkService {
                 .fetch(this::recordToDto);
     }
 
+    public Stats getStats() {
+        return dsl.select(count(), coalesce(sum(LINK.VISITS)))
+                .from(LINK)
+                .fetchOne(r -> new Stats(r.value1().longValue(),
+                        Objects.requireNonNullElse(r.value2(), BigInteger.ZERO)));
+    }
+
     private Link recordToDto(LinkRecord r) {
         String absoluteUrl = uriInfo.getBaseUri().toString() + r.getId();
         var userId = securityService.getUserId();
@@ -126,36 +155,5 @@ public class LinkService {
                 r.getVisits(),
                 r.getCreatedAt().toInstant(),
                 isOwner);
-    }
-
-    public URI validateUrl(String url) throws IllegalArgumentException {
-        if (url == null || url.isBlank()) {
-            throw new IllegalArgumentException("Cannot be blank");
-        }
-
-        if (!url.matches("^https?://.+")) {
-            throw new IllegalArgumentException("URL should start with http/https");
-        }
-
-        if (url.length() > 2048) {
-            throw new IllegalArgumentException("Too long");
-        }
-
-        try {
-            return new URI(url);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid URL");
-        }
-    }
-
-    public String generateId() {
-        return NanoIdUtils.randomNanoId(random, BASE58_ALPHABET, 6);
-    }
-
-    public Stats getStats() {
-        return dsl.select(count(), coalesce(sum(LINK.VISITS)))
-                .from(LINK)
-                .fetchOne(r -> new Stats(r.value1().longValue(),
-                        Objects.requireNonNullElse(r.value2(), BigInteger.ZERO)));
     }
 }
