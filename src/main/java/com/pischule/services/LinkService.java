@@ -1,6 +1,7 @@
 package com.pischule.services;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.pischule.jooq.tables.records.LinkRecord;
 import com.pischule.model.Link;
 import com.pischule.model.Stats;
 import jakarta.annotation.PostConstruct;
@@ -11,7 +12,6 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.UriInfo;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
-import org.jooq.generated.tables.records.LinkRecord;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -20,7 +20,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 
-import static org.jooq.generated.tables.Link.LINK;
+import static com.pischule.jooq.Tables.LINK;
 import static org.jooq.impl.DSL.*;
 
 @ApplicationScoped

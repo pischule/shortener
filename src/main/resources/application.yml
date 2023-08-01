@@ -1,7 +1,7 @@
 quarkus:
   jooq:
     dialect: POSTGRES
-  liquibase:
+  flyway:
     migrate-at-start: true
   http:
     cors: true
