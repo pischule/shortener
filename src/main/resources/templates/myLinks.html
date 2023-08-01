@@ -32,7 +32,11 @@
         {/if}
         </span>
 
-        <span>{from}-{to} / {totalCount}</span>
+        {#if from == to}
+            <span>{from} / {totalCount}</span>
+        {#else}
+            <span>{from}-{to} / {totalCount}</span>
+        {/if}
 
         <span>
         {#if to < totalCount}
