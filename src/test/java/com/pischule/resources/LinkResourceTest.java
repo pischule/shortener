@@ -30,7 +30,7 @@ public class LinkResourceTest {
                 .redirects().follow(false)
                 .when().get("/aaaaaa")
                 .then()
-                .statusCode(301)
+                .statusCode(303)
                 .header("Location", "https://example.com")
                 .contentType(ContentType.HTML)
                 .body(containsString("Redirecting to"),
