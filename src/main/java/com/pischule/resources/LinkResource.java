@@ -30,7 +30,7 @@ public class LinkResource {
         Log.infof("redirect, id=%s", id);
         var uri = linkService.incrementVisitsAndGetUri(id);
         var body = Templates.redirect(uri);
-        return Response.status(RestResponse.Status.MOVED_PERMANENTLY)
+        return Response.status(RestResponse.Status.SEE_OTHER)
                 .location(uri)
                 .entity(body)
                 .build();
