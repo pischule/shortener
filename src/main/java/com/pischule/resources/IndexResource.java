@@ -1,8 +1,9 @@
 package com.pischule.resources;
 
 import com.pischule.model.Link;
+import com.pischule.model.Stats;
 import com.pischule.services.LinkService;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
@@ -22,17 +23,11 @@ import static jakarta.ws.rs.core.Response.Status.FOUND;
 @Produces(MediaType.TEXT_HTML)
 public class IndexResource {
     @Inject
-    Template index;
-
-    @Inject
     LinkService linkService;
 
     @GET
     public TemplateInstance get() {
-        return index
-                .data("error", null)
-                .data("stats", linkService.getStats())
-                .data("url", null);
+        return Templates.index(linkService.getStats(), null, null);
     }
 
     @POST
@@ -42,10 +37,7 @@ public class IndexResource {
         try {
             link = linkService.saveUrl(url);
         } catch (IllegalArgumentException e) {
-            var body = index
-                    .data("error", e.getMessage())
-                    .data("stats", linkService.getStats())
-                    .data("url", url);
+            var body = Templates.index(linkService.getStats(), url, e.getMessage());
             return Response.status(400).entity(body).build();
         }
 
@@ -58,5 +50,10 @@ public class IndexResource {
     @Path("sign-in")
     public Response singIn(@RestQuery String redirect) {
         return Response.temporaryRedirect(URI.create(redirect)).build();
+    }
+
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance index(Stats stats, String url, String error);
     }
 }

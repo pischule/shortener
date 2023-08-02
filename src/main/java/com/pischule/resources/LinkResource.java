@@ -1,8 +1,9 @@
 package com.pischule.resources;
 
+import com.pischule.model.Link;
 import com.pischule.services.LinkService;
 import io.quarkus.logging.Log;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
@@ -22,31 +23,24 @@ import java.net.URI;
 public class LinkResource {
 
     @Inject
-    Template view;
-
-    @Inject
-    Template edit;
-
-    @Inject
     LinkService linkService;
-
-    @Inject
-    Template redirect;
 
     @GET
     public Response redirect(@RestPath String id) {
         Log.infof("redirect, id=%s", id);
         var uri = linkService.incrementVisitsAndGetUri(id);
+        var body = Templates.redirect(uri);
         return Response.status(RestResponse.Status.MOVED_PERMANENTLY)
                 .location(uri)
-                .entity(redirect.data("uri", uri))
+                .entity(body)
                 .build();
     }
 
     @GET
     @Path("view")
     public TemplateInstance getView(@RestPath String id) {
-        return view.data("link", linkService.getById(id));
+        var link = linkService.getById(id);
+        return Templates.view(link);
     }
 
     @Authenticated
@@ -54,7 +48,7 @@ public class LinkResource {
     @Path("edit")
     public TemplateInstance getEdit(@RestPath String id) {
         var link = linkService.getById(id);
-        return edit.data("link", link).data("error", null);
+        return Templates.edit(link.id(), link.url(), null);
     }
 
     @Authenticated
@@ -66,10 +60,7 @@ public class LinkResource {
         try {
             linkService.updateUrl(link, url);
         } catch (IllegalArgumentException e) {
-            var body = edit
-                    .data("link", link)
-                    .data("error", e.getMessage())
-                    .data("url", url);
+            var body = Templates.edit(link.id(), url, e.getMessage());
             return Response.status(400).entity(body).build();
         }
 
@@ -83,5 +74,14 @@ public class LinkResource {
     public Response deleteLink(@RestPath String id) {
         linkService.delete(id);
         return Response.seeOther(URI.create("/my-links")).build();
+    }
+
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance view(Link link);
+
+        public static native TemplateInstance edit(String id, String url, String error);
+
+        public static native TemplateInstance redirect(URI uri);
     }
 }

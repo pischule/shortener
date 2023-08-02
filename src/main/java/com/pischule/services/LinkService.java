@@ -3,6 +3,7 @@ package com.pischule.services;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.pischule.jooq.tables.records.LinkRecord;
 import com.pischule.model.Link;
+import com.pischule.model.Page;
 import com.pischule.model.Stats;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,13 +12,11 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.UriInfo;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
 
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
-import java.util.List;
 import java.util.Objects;
 
 import static com.pischule.jooq.Tables.LINK;
@@ -96,15 +95,15 @@ public class LinkService {
 
     private URI validateUrl(String url) throws IllegalArgumentException {
         if (url == null || url.isBlank()) {
-            throw new IllegalArgumentException("Cannot be blank");
+            throw new IllegalArgumentException("This field cannot be empty");
         }
 
         if (!url.matches("^https?://.+")) {
-            throw new IllegalArgumentException("URL should start with http/https");
+            throw new IllegalArgumentException("Doesn't start with http/https");
         }
 
         if (url.length() > 2048) {
-            throw new IllegalArgumentException("Too long");
+            throw new IllegalArgumentException("Too long (> 2048 symbols)");
         }
 
         try {
@@ -122,20 +121,19 @@ public class LinkService {
                 .execute();
     }
 
-    public Integer countOwned() {
-        return dsl.selectCount()
-                .from(LINK)
-                .where(LINK.CREATOR.eq(securityService.getUserId()))
-                .fetchOne(Record1::value1);
-    }
-
-    public List<Link> getOwned(int page, int size) {
-        return dsl.selectFrom(LINK)
+    public Page<Link> getOwned(int page, int size) {
+        var elements = dsl.selectFrom(LINK)
                 .where(LINK.CREATOR.eq(securityService.getUserId()))
                 .orderBy(LINK.CREATED_AT.desc())
                 .limit(size)
                 .offset(page * size)
                 .fetch(this::recordToDto);
+        var count = dsl.selectCount()
+                .from(LINK)
+                .where(LINK.CREATOR.eq(securityService.getUserId()))
+                .fetchOne(0, int.class);
+
+        return new Page<>(elements, page, size, count);
     }
 
     public Stats getStats() {

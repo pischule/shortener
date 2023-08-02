@@ -1,7 +1,9 @@
 package com.pischule.resources;
 
+import com.pischule.model.Link;
+import com.pischule.model.Page;
 import com.pischule.services.LinkService;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.Blocking;
@@ -18,26 +20,18 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Path("my-links")
 public class MyLinksResource {
     @Inject
-    Template myLinks;
-
-    @Inject
     LinkService linkService;
 
     @GET
     @Authenticated
     public TemplateInstance get(@RestQuery("page") @DefaultValue("0") Integer pageIndex) {
         int pageSize = 20;
-        var ownedLinksPortion = linkService.getOwned(pageIndex, pageSize);
-        var allOwnedLinks = linkService.countOwned();
+        var page = linkService.getOwned(pageIndex, pageSize);
+        return Templates.myLinks(page);
+    }
 
-        return myLinks
-                .data("links", ownedLinksPortion)
-                .data("previousPage", pageIndex - 1)
-                .data("page", pageIndex)
-                .data("nextPage", pageIndex + 1)
-                .data("from", pageIndex * pageSize + 1)
-                .data("to", pageIndex * pageSize + ownedLinksPortion.size())
-                .data("totalCount", allOwnedLinks)
-                .data("count", ownedLinksPortion.size());
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance myLinks(Page<Link> page);
     }
 }

@@ -1,5 +1,5 @@
 {#include base}
-    {#title}{link.id}{/}
+    {#title}{id}{/}
 
     <h2>Edit URL</h2>
 
@@ -13,7 +13,7 @@
             name="url"
             autocomplete="off"
             aria-label="url"
-            value="{link.url}"
+            value="{url}"
             {#if error != null}aria-invalid="true"{/if}
     />
     {#if error}<small>{error}</small>{/if}

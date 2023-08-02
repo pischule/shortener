@@ -1,0 +1,46 @@
+{#include base}
+    <h2>My Links</h2>
+
+    <figure>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Link</th>
+                <th scope="col">Clicks</th>
+                <th scope="col">Destination</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#for link in page.elements}
+                <tr>
+                <td><a href="/{link.id}/view">{link.id}</a></td>
+                <td>{link.visits}</td>
+                <td><a href="{link.url}">{link.url}</a></td>
+                </tr>
+            {/for}
+            </tbody>
+        </table>
+    </figure>
+
+    {#if page.totalElementsCount > page.elementsCount}
+        <div class="pagination">
+        <span>
+        {#if page.hasPreviousPage}
+            <a href="?page={page.previousPageIndex}">Previous</a>
+        {/if}
+        </span>
+
+        {#if page.startElementNumber == page.endElementNumber}
+            <span>{page.startElementNumber} / {page.totalElementsCount}</span>
+        {#else}
+            <span>{page.startElementNumber}-{page.endElementNumber} / {page.totalElementsCount}</span>
+        {/if}
+
+        <span>
+        {#if page.hasNextPage}
+        <a href="?page={page.nextPageIndex}">Next</a>
+        {/if}
+        </span>
+        </div>
+    {/if}
+{/include}
