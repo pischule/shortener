@@ -137,10 +137,9 @@ public class LinkService {
     }
 
     public Stats getStats() {
-        return dsl.select(count(), coalesce(sum(LINK.VISITS)))
+        return dsl.select(count(), sum(LINK.VISITS))
                 .from(LINK)
-                .fetchOne(r -> new Stats(r.value1().longValue(),
-                        Objects.requireNonNullElse(r.value2(), BigInteger.ZERO)));
+                .fetchOne(r -> new Stats(r.value1(), Objects.requireNonNullElse(r.value2(), BigInteger.ZERO)));
     }
 
     private Link recordToDto(LinkRecord r) {
