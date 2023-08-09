@@ -1,4 +1,6 @@
 quarkus:
+  native:
+    additional-build-args: '-H:ReflectionConfigurationFiles=reflection-config.json'
   jooq:
     dialect: POSTGRES
   flyway:
