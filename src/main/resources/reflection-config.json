@@ -1,0 +1,11 @@
+[
+  {
+    "name" : "com.pischule.jooq.tables.records.LinkRecord",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  }
+]
